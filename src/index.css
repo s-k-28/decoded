@@ -363,3 +363,41 @@ button { font-family: inherit; cursor: pointer; }
   .lp-stats, .lp-steps, .lp-trust, .lp-who { grid-template-columns: 1fr; }
   .lp-links { display: none; }
 }
+
+/* ---- Verification layer: law badge, scam banner, violations, citations -- */
+
+.law-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin: 2px 0 2px; padding: 8px 14px;
+  background: var(--green-soft); color: var(--green-deep);
+  border: 1px solid color-mix(in srgb, var(--green) 32%, transparent);
+  border-radius: 999px; font-size: 13.5px; font-weight: 600; line-height: 1.3;
+}
+.law-badge svg { width: 15px; height: 15px; flex: none; }
+
+.scam-banner {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 16px 18px; border-radius: var(--radius);
+  border: 1.5px solid var(--red); background: var(--red-soft);
+}
+.scam-banner--medium { border-color: var(--amber); background: var(--amber-soft); }
+.scam-banner-icon { color: var(--red); flex: none; margin-top: 1px; }
+.scam-banner--medium .scam-banner-icon { color: var(--amber); }
+.scam-banner-body strong { display: block; font-size: 16px; color: var(--red); }
+.scam-banner--medium .scam-banner-body strong { color: var(--amber); }
+.scam-banner-body p { margin-top: 4px; font-size: 15px; color: var(--ink-soft); line-height: 1.5; }
+.scam-signals { margin: 10px 0 0; padding-left: 18px; }
+.scam-signals li { font-size: 14px; color: var(--ink-soft); margin-top: 3px; }
+
+.card--violations { border-left: 3px solid var(--red); }
+
+.cite-link {
+  display: inline-flex; align-items: center; gap: 4px;
+  margin-top: 8px; padding: 3px 10px;
+  background: var(--paper-2); border: 1px solid var(--line);
+  border-radius: 7px; font-size: 12.5px; font-weight: 600;
+  color: var(--green-deep); text-decoration: none; letter-spacing: 0.01em;
+}
+.cite-link::before { content: '\00a7'; font-weight: 700; }
+a.cite-link:hover { border-color: var(--green); background: var(--green-soft); }
+.cite-link--plain { color: var(--ink-soft); }

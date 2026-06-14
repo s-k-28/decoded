@@ -6,6 +6,11 @@ import { loadHistory, saveToHistory, clearHistory, type HistoryItem } from './li
 
 const EXAMPLES: { label: string; text: string }[] = [
   {
+    label: 'Debt collection letter',
+    text:
+      'SECOND NOTICE - ACCOUNT #4471-22. This is an attempt to collect a debt. Our records show you owe 1,842.00 dollars. You must pay the full amount within 48 HOURS or we will forward your file for arrest and wage garnishment. Avoid legal action by paying today with a prepaid debit or gift card. Call 1-800-555-0143 immediately. This is your final warning.',
+  },
+  {
     label: 'Eviction notice',
     text:
       'NOTICE TO PAY RENT OR QUIT. You owe 1450 dollars in rent for the month of May 2026. You must pay this amount in full or move out and surrender the premises within THREE (3) DAYS after you receive this notice, not counting weekends or legal holidays. If you fail to pay or move out, we will begin a court case to evict you and to recover possession, unpaid rent, damages, and costs. Payment must be made by certified check or money order to the landlord at the address above. Dated June 12, 2026.',
@@ -107,9 +112,19 @@ export function Decoder({ onHome }: { onHome: () => void }) {
       setSpeaking(false);
       return;
     }
+    const scam =
+      result.scam_risk && (result.scam_risk.level === 'high' || result.scam_risk.level === 'medium')
+        ? `Warning. ${result.scam_risk.level === 'high' ? 'High scam risk.' : 'Possible scam signals.'} ${result.scam_risk.summary}`
+        : '';
+    const problems =
+      (result.violations?.length ?? 0) > 0
+        ? 'Problems with this letter. ' + result.violations!.map((v) => v.issue).join('. ')
+        : '';
     const parts = [
+      scam,
       result.summary,
       result.meaning_for_you,
+      problems,
       result.deadlines.length ? 'Deadlines. ' + result.deadlines.map((d) => `${d.label}. ${d.raw_text}`).join('. ') : '',
       result.actions.length ? 'What to do. ' + result.actions.map((a) => a.task).join('. ') : '',
     ]
@@ -295,9 +310,30 @@ export function Decoder({ onHome }: { onHome: () => void }) {
               )}
             </div>
 
+            {(result.law_checked?.length ?? 0) > 0 && (
+              <div className="law-badge">
+                <Icon.Shield /> Checked against {result.law_checked!.join(', ')}
+              </div>
+            )}
+
             {result.confidence === 'low' && (
               <div className="uncertain">
                 <strong>Decoded had trouble reading parts of this.</strong> Please check the original document, and consider getting help from one of the resources below.
+              </div>
+            )}
+
+            {result.scam_risk && (result.scam_risk.level === 'high' || result.scam_risk.level === 'medium') && (
+              <div className={`scam-banner scam-banner--${result.scam_risk.level}`} role="alert">
+                <span className="scam-banner-icon"><Icon.Flag /></span>
+                <div className="scam-banner-body">
+                  <strong>{result.scam_risk.level === 'high' ? 'High scam risk' : 'Possible scam signals'}</strong>
+                  {result.scam_risk.summary && <p>{result.scam_risk.summary}</p>}
+                  {result.scam_risk.signals.length > 0 && (
+                    <ul className="scam-signals">
+                      {result.scam_risk.signals.map((s, i) => <li key={i}>{s}</li>)}
+                    </ul>
+                  )}
+                </div>
               </div>
             )}
 
@@ -306,6 +342,24 @@ export function Decoder({ onHome }: { onHome: () => void }) {
               <p className="summary-lead">{result.summary}</p>
               <p className="summary-meaning">{result.meaning_for_you}</p>
             </section>
+
+            {(result.violations?.length ?? 0) > 0 && (
+              <section className="card card--violations">
+                <div className="card-head"><span className="card-icon"><Icon.Flag /></span><span className="card-title">Problems with this letter</span></div>
+                {result.violations!.map((v, i) => (
+                  <div className="row" key={i}>
+                    <span className="row-dot row-dot--critical" />
+                    <div className="row-body">
+                      <div className="row-inline"><span className="row-title">{v.issue}</span><span className={`sev sev--${v.severity}`}>{v.severity}</span></div>
+                      <div className="row-note">{v.explanation}</div>
+                      {v.citation && (v.source_url
+                        ? <a className="cite-link" href={v.source_url} target="_blank" rel="noreferrer">{v.citation}</a>
+                        : <span className="cite-link cite-link--plain">{v.citation}</span>)}
+                    </div>
+                  </div>
+                ))}
+              </section>
+            )}
 
             {result.deadlines.length > 0 && (
               <section className="card card--deadlines">
@@ -346,7 +400,15 @@ export function Decoder({ onHome }: { onHome: () => void }) {
                 {result.rights.map((r, i) => (
                   <div className="row" key={i}>
                     <span className="row-dot" style={{ background: 'var(--green)' }} />
-                    <div className="row-body"><div className="row-title">{r.right}</div>{r.basis ? <div className="row-note">{r.basis}</div> : <span className="right-tag">General guidance, verify for your situation</span>}</div>
+                    <div className="row-body">
+                      <div className="row-title">{r.right}</div>
+                      {r.basis && <div className="row-note">{r.basis}</div>}
+                      {r.citation
+                        ? (r.source_url
+                            ? <a className="cite-link" href={r.source_url} target="_blank" rel="noreferrer">{r.citation}</a>
+                            : <span className="cite-link cite-link--plain">{r.citation}</span>)
+                        : (!r.basis && <span className="right-tag">General guidance, verify for your situation</span>)}
+                    </div>
                   </div>
                 ))}
               </section>

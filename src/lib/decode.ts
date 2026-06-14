@@ -5,20 +5,26 @@ const FN_URL = 'https://dgsx9pmv.functions.insforge.app/decode-document';
 
 export interface Deadline { label: string; date: string | null; raw_text: string; urgency: 'critical' | 'soon' | 'info'; }
 export interface Action { task: string; why: string; by: string | null; }
-export interface Right { right: string; basis: string | null; }
+export interface Right { right: string; basis: string | null; citation?: string | null; source_url?: string | null; }
+export interface Violation { issue: string; citation: string | null; source_url: string | null; severity: 'high' | 'medium' | 'low'; explanation: string; }
+export interface ScamRisk { level: 'high' | 'medium' | 'low' | 'none'; signals: string[]; summary: string; }
 export interface RedFlag { flag: string; severity: 'high' | 'medium' | 'low'; explanation: string; }
 export interface GetHelp { resource: string; type: string; note: string; }
 
 export interface DecodeResult {
   document_type: string;
+  is_debt_collection?: boolean;
   confidence: 'high' | 'medium' | 'low';
   language: string;
   reading_level: string;
   summary: string;
   meaning_for_you: string;
+  law_checked?: string[];
   deadlines: Deadline[];
   actions: Action[];
   rights: Right[];
+  violations?: Violation[];
+  scam_risk?: ScamRisk;
   red_flags: RedFlag[];
   draft_response: string;
   uncertainties: string[];
