@@ -1,7 +1,7 @@
 // Calls the Decoded edge function (public, runs on InsForge, holds the AI key
 // server-side). Plain fetch, no auth needed.
 
-const FN_URL = 'https://nmf6vbv4.functions.insforge.app/decode-document';
+const FN_URL = 'https://dgsx9pmv.functions.insforge.app/decode-document';
 
 export interface Deadline { label: string; date: string | null; raw_text: string; urgency: 'critical' | 'soon' | 'info'; }
 export interface Action { task: string; why: string; by: string | null; }
