@@ -4,28 +4,7 @@ import { speak, stopSpeaking, supportsTTS } from './lib/tts';
 import { downloadReminder } from './lib/ics';
 import { loadHistory, saveToHistory, clearHistory, type HistoryItem } from './lib/history';
 import { FLAGSHIP_TEXT, FLAGSHIP_RESULT } from './lib/demoFallback';
-
-const EXAMPLES: { label: string; text: string }[] = [
-  {
-    label: 'Debt collection letter',
-    text: FLAGSHIP_TEXT,
-  },
-  {
-    label: 'Insurance denial',
-    text:
-      'EXPLANATION OF BENEFITS. This is not a bill. Member: J. Rivera. Claim #99213. Date of service 05/02/2026. Provider: Lakeshore Cardiology. Your claim was DENIED. Reason: services deemed not medically necessary. Plan paid: 0.00. Patient responsibility: 2,310.00. If you disagree with this decision you may contact member services.',
-  },
-  {
-    label: 'Medical bill',
-    text:
-      'STATEMENT. Date of service 04/18/2026. EMERGENCY ROOM visit at Regional Medical Center, an in-network hospital. The treating physician was OUT-OF-NETWORK. Your health plan paid the in-network rate. Remaining balance billed to patient: 3,400.00. Patient responsibility is due within 30 days. Please remit payment to the address on the statement.',
-  },
-  {
-    label: 'Eviction notice',
-    text:
-      'NOTICE TO PAY RENT OR QUIT. You owe 1450 dollars in rent for the month of May 2026. You must pay this amount in full or move out and surrender the premises within THREE (3) DAYS after you receive this notice, not counting weekends or legal holidays. If you fail to pay or move out, we will begin a court case to evict you and to recover possession, unpaid rent, damages, and costs. Payment must be made by certified check or money order to the landlord at the address above. Dated June 12, 2026.',
-  },
-];
+import { ImportPanel } from './components/ImportPanel';
 
 const LANGS = [
   { code: 'en', name: 'English' },
@@ -65,7 +44,6 @@ export function Decoder({ onHome }: { onHome: () => void }) {
   const [speaking, setSpeaking] = useState(false);
   const [history, setHistory] = useState<HistoryItem[]>(() => loadHistory());
   const [showHistory, setShowHistory] = useState(false);
-  const fileRef = useRef<HTMLInputElement>(null);
   const resultRef = useRef<HTMLDivElement>(null);
   const [scanStep, setScanStep] = useState(0);
 
@@ -124,15 +102,6 @@ export function Decoder({ onHome }: { onHome: () => void }) {
   const changeLang = (code: string) => {
     setLanguage(code);
     if (result) run({ language: code });
-  };
-
-  const onFile = (f: File) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      setImageUrl(reader.result as string);
-      setTab('photo');
-    };
-    reader.readAsDataURL(f);
   };
 
   const sayAll = () => {
@@ -236,66 +205,16 @@ export function Decoder({ onHome }: { onHome: () => void }) {
 
         {!loading && (
           <>
-            <div className="input-card">
-              <div className="input-tabs" role="tablist" aria-label="Document input">
-                <button className="input-tab" role="tab" aria-selected={tab === 'paste'} onClick={() => setTab('paste')}>
-                  Paste text
-                </button>
-                <button className="input-tab" role="tab" aria-selected={tab === 'photo'} onClick={() => setTab('photo')}>
-                  Upload a photo
-                </button>
-              </div>
-              <div className="input-body">
-                {tab === 'paste' ? (
-                  <textarea
-                    className="input-area"
-                    placeholder="Paste the words from your letter or bill here..."
-                    value={text}
-                    onChange={(e) => setText(e.target.value)}
-                    aria-label="Document text"
-                  />
-                ) : (
-                  <div
-                    className="dropzone"
-                    role="button"
-                    tabIndex={0}
-                    onClick={() => fileRef.current?.click()}
-                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') fileRef.current?.click(); }}
-                    onDragOver={(e) => e.preventDefault()}
-                    onDrop={(e) => { e.preventDefault(); const f = e.dataTransfer.files[0]; if (f) onFile(f); }}
-                  >
-                    {imageUrl ? (
-                      <img className="dropzone-preview" src={imageUrl} alt="Your uploaded document" />
-                    ) : (
-                      <>
-                        <span className="dropzone-icon"><Icon.Camera /></span>
-                        <span>Tap to take a photo or upload an image</span>
-                        <span className="dropzone-hint">A clear photo of the whole page works best</span>
-                      </>
-                    )}
-                    <input
-                      ref={fileRef}
-                      type="file"
-                      accept="image/*"
-                      hidden
-                      onChange={(e) => { const f = e.target.files?.[0]; if (f) onFile(f); }}
-                    />
-                  </div>
-                )}
-                <div className="input-foot">
-                  <div className="example-chips">
-                    {EXAMPLES.map((ex) => (
-                      <button key={ex.label} className="chip" onClick={() => { setText(ex.text); setTab('paste'); }}>
-                        {ex.label}
-                      </button>
-                    ))}
-                  </div>
-                  <button className="btn" disabled={!canRun} onClick={() => run()}>
-                    Decode this
-                  </button>
-                </div>
-              </div>
-            </div>
+            <ImportPanel
+              text={text}
+              setText={setText}
+              imageUrl={imageUrl}
+              setImageUrl={setImageUrl}
+              tab={tab}
+              setTab={setTab}
+              canRun={canRun}
+              onRun={() => run()}
+            />
 
             <div className="controls">
               <div className="control">
