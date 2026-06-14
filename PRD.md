@@ -178,6 +178,13 @@ Priority key: P0 is required for the winning MVP and the demo. P1 is a high-valu
 - FR-42 (P0): The user can clear the current result and decode a new document.
 - FR-43 (P0): The app never shows a blank or broken screen on error; every error returns a clear, plain-language message and a retry path.
 
+### 7.11 Legal grounding and verification (the verifier)
+- FR-44 (P0): The backend classifies the document into one of four cited verticals (debt collection, medical billing, housing and eviction, public benefits) or general, and selects the matching cited corpus of statutes and regulations.
+- FR-45 (P0): The model may use a citation and source_url only by copying them verbatim from the corpus it was given. A citation that is not in the corpus can never reach the result. Every source_url is a real primary source that resolves.
+- FR-46 (P0): The result includes a Violations list. Each violation is a concrete problem with this document measured against the corpus (a missing required disclosure, a prohibited practice, an unlawful threat, or a charge the law says you should not owe) and each must map to a corpus citation. The reconciliation pass drops any violation without a citation (no citation, no claim); softer concerns are demoted to red flags.
+- FR-47 (P0): The result includes a calibrated scam_risk. Deterministic signals are split into scam signals (which raise the meter) and conduct signals (a likely illegal practice, surfaced as a red flag). A real bill, eviction notice, or benefits notice is capped so it never reads as a scam, while a real scam letter is forced high.
+- FR-48 (P1): The result can include a grounded legal-procedure timeline (procedure) describing, in order, what legally happens next for this document type, plus one honest sentence on the consequence of doing nothing (what_if_ignored). Both are grounded only in the corpus and the document, are honest where the law varies by state, and are null or empty when they cannot be grounded.
+
 ---
 
 ## 8. Screens and states (functional inventory for the designer)
@@ -248,22 +255,30 @@ The backend returns a single JSON object, the Decode Result. Every array may be 
 ```
 {
   "document_type": string,                 // e.g. "Eviction Notice", "Medical Bill", "Benefit Letter", "Unknown"
+  "is_debt_collection": boolean,           // true only for a debt-collection letter
   "confidence": "high" | "medium" | "low",
   "language": string,                      // BCP-47 of the output, e.g. "en", "es"
   "reading_level": string,                 // echoes the requested level
   "summary": string,                       // 2 to 3 plain sentences: what this document is
   "meaning_for_you": string,               // direct second person: what it means for the reader
+  "law_checked": [ string ],               // bodies of law from the corpus actually used
   "deadlines": [
     { "label": string, "date": string|null, "raw_text": string, "urgency": "critical"|"soon"|"info" }
   ],
   "actions": [ { "task": string, "why": string, "by": string|null } ],
-  "rights": [ { "right": string, "basis": string|null } ],
+  "rights": [ { "right": string, "basis": string|null, "citation": string|null, "source_url": string|null } ],
+  "violations": [ { "issue": string, "citation": string|null, "source_url": string|null, "severity": "high"|"medium"|"low", "explanation": string } ],
+  "scam_risk": { "level": "high"|"medium"|"low"|"none", "signals": [ string ], "summary": string },
   "red_flags": [ { "flag": string, "severity": "high"|"medium"|"low", "explanation": string } ],
   "draft_response": string,
+  "procedure": [ { "step": string, "detail": string } ],   // ordered "what happens next", grounded in the corpus
+  "what_if_ignored": string|null,                          // one honest sentence, or null when not grounded
   "uncertainties": [ string ],
-  "get_help": [ { "resource": string, "type": "legal_aid"|"hotline"|"gov_agency"|"tenant_union"|"other", "note": string } ]
+  "get_help": [ { "resource": string, "type": "legal_aid"|"hotline"|"gov_agency"|"tenant_union"|"benefits_office"|"cfpb"|"insurance_regulator"|"other", "note": string } ]
 }
 ```
+
+Citation discipline (enforced in code): every `citation` and `source_url` is copied verbatim from the cited corpus the model was handed, never generated. The `violations` list is filtered so any item without a citation is dropped (no citation, no claim). `procedure` and `what_if_ignored` are optional and grounded only in the corpus and the document.
 
 Persisted analysis record (P1), stored server-side:
 ```
@@ -284,8 +299,9 @@ Exactly one of text or imageUrl is required.
 - The model receives the document (as text or an image) plus the target reading level and target language.
 - The model writes every output field in the target language at the target reading level, in short sentences, defining any unavoidable term inline, in a calm, warm, direct, second-person voice.
 - Hard rules the model must follow: it is not a lawyer or doctor and does not give advice; it never invents facts, dates, statutes, amounts, or rights; rights are stated only when written in the document or broadly established, with the basis set to null rather than guessing a law; unreadable or ambiguous content is surfaced as an uncertainty, never guessed; red flags name concrete predatory, illegal, or scam signals with a reason; the draft never admits fault and uses bracketed placeholders; get-help names only real categories of help.
+- When the document falls in a cited vertical, the model is also given a RIGHTS CORPUS and DETECTED SIGNALS. It may cite ONLY by copying a citation and source_url verbatim from that corpus; an uncited statement carries null citation and source_url. It maps each violation to a corpus citation and uses the procedure timeline to lay out what happens next, grounded in the corpus, honest where it varies by state.
 - Output is strict JSON matching the schema, with no prose outside the JSON.
-- Reliability: the backend requests strict JSON, defensively parses the response, and on a parse failure retries once with a stricter instruction. The model identifier is configurable so it can be swapped quickly if a provider is slow or unavailable.
+- Reliability: the backend requests strict JSON, defensively parses the response, and on a parse failure retries once with a stricter instruction. A reconciliation pass then forces the most serious deterministic signals to survive, calibrates the scam meter (scam signals raise it, conduct signals do not), drops uncited violations, and normalizes the procedure fields. The model identifier is configurable so it can be swapped quickly if a provider is slow or unavailable.
 
 ---
 
@@ -314,9 +330,9 @@ Exactly one of text or imageUrl is required.
 
 ## 14. Scope: MVP versus stretch
 
-Winning MVP (must ship and demo): FR-1 through FR-5, FR-8 through FR-35, FR-42, FR-43. This is the complete decode flow with all result sections, reading levels, languages, voice, accessibility, and the responsible-AI behavior. This is already a standout, defensible product.
+Winning MVP (must ship and demo): FR-1 through FR-5, FR-8 through FR-35, FR-42, FR-43, plus the verifier FR-44 through FR-47. This is the complete decode flow with all result sections, reading levels, languages, voice, accessibility, the responsible-AI behavior, and the cited-corpus verifier across four verticals. This is already a standout, defensible product.
 
-High-value standout adds (ship as time allows, in this order): FR-37 (pre-seeded demo safety net), FR-36 (history), FR-39 (calendar reminders), FR-40 (copy and print), FR-35 (low-confidence prompt), FR-6 (PDF).
+High-value standout adds (ship as time allows, in this order): FR-48 (legal-procedure timeline, shipped), FR-37 (pre-seeded demo safety net), FR-36 (history), FR-39 (calendar reminders), FR-40 (copy and print), FR-35 (low-confidence prompt), FR-6 (PDF).
 
 Stretch: FR-41 (follow-up Q and A), FR-38 (scoped accounts), FR-7 (URL or email input).
 
@@ -326,6 +342,7 @@ Stretch: FR-41 (follow-up Q and A), FR-38 (scoped accounts), FR-7 (URL or email 
 
 - It solves a concrete, cited, human problem at large scope, which lands the Impact criterion.
 - It does something no competitor does: one tool that reads any document and returns comprehension plus rights plus actions plus scam detection plus a drafted reply, multilingual and read aloud. Single-purpose tools exist (one screens SNAP, one negotiates a hospital bill, one generates a tenant letter, generic chat-with-PDF just answers questions); none combine these, and none are accessibility-first.
+- The moat is the grounding, not the model. Decoded does not let the model originate law: it classifies the document, grounds the model on a curated corpus of the real statutes across four verticals, and lets it cite only by copying from that corpus, so every right and violation on screen links to a statute a judge can open. A deterministic rules engine backs up the most serious findings and a procedure timeline tells the reader what happens next. That citation discipline is what turns an explainer into a verifier.
 - It is responsible by design (explains, does not advise; never fabricates; routes to real help), which directly impresses the senior and AI-governance judges and is a credibility moat.
 - It is accessibility-first (voice, reading level, language, large text), which almost no beginner project does and which the design and impact criteria reward.
 - It works live on a real document in seconds, which wins the feasibility and presentation criteria.
