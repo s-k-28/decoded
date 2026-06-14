@@ -165,7 +165,7 @@ Decoded checks four cited verticals today. Federal law is uniform; eviction and 
 | --- | --- | --- |
 | **Debt collection** | Fair Debt Collection Practices Act (15 U.S.C. 1692) and Regulation F (12 CFR 1006) | Missing validation notice, false arrest threats, harassment, third-party disclosure, suing on time-barred debt, your 30-day dispute right, your right to sue (1692k) |
 | **Medical billing** | No Surprises Act (42 U.S.C. 300gg-111, 45 CFR 149) and ACA appeal rights (45 CFR 147.136) | Balance billing for emergency or in-network-facility care, the good-faith estimate, the $400 dispute threshold, the 180-day internal appeal, the 4-month external review, the 72-hour expedited urgent appeal |
-| **Housing and eviction** | State notice law (Texas, California, Massachusetts, Washington) and the federal CARES Act (15 U.S.C. 9058) | The required notice period before an eviction suit, illegal self-help eviction (lockouts, utility shutoffs), the federal 30-day notice for covered dwellings, the absence of a federal right to counsel |
+| **Housing and eviction** | State notice law (Texas, California, Massachusetts, Washington, Florida, Illinois, Pennsylvania) and the federal CARES Act (15 U.S.C. 9058) | The required notice period before an eviction suit, illegal self-help eviction (lockouts, utility shutoffs), the federal 30-day notice for covered dwellings, the absence of a federal right to counsel |
 | **Public benefits** | SNAP fair-hearing rules (7 CFR 273) and Medicaid fair-hearing rules (42 CFR 431) | Your right to a fair hearing, the deadline to request one, the requirement that a denial notice state the reason and the appeal path, and benefits that continue if you appeal in time |
 
 State variation is a first-class concern, not a footnote:
@@ -174,6 +174,9 @@ State variation is a first-class concern, not a footnote:
 - **California** gives 3 court days to pay or quit, excluding weekends and holidays (Cal. Code Civ. Proc. 1161(2)).
 - **Massachusetts** requires 14 days for nonpayment (M.G.L. c.186 11-12).
 - **Washington** requires 14 days to pay or vacate for residential tenancies (RCW 59.12.030(3)).
+- **Florida** requires a 3-day notice to pay or vacate, excluding weekends and legal holidays (Fla. Stat. 83.56(3)).
+- **Illinois** requires a 5-day notice for nonpayment (735 ILCS 5/9-209).
+- **Pennsylvania** defaults to a 10-day notice to quit, which a written lease can waive (68 P.S. 250.501(b)).
 - **Federally backed rentals** require a 30-day notice to vacate (CARES Act, 15 U.S.C. 9058).
 
 Decoded tells the reader which rule applies and reminds them to confirm their own state.

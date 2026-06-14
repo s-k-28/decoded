@@ -1,0 +1,105 @@
+/* =========================================================================
+   Decoded - cited-verifier sections layered on the HIVE design system.
+   These surface the backend's grounded checks (scam verdict, violations with
+   real citations, the bodies of law used, and the "what happens next"
+   procedure timeline) using the same warm tokens and card language as
+   decoded.css. No em-dashes.
+   ========================================================================= */
+
+/* ---- Scam verdict banner -------------------------------------------- */
+.dc-verdict {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 15px 18px; border-radius: 16px; margin-bottom: 18px;
+  border: 1px solid var(--d-line-2); background: var(--d-panel);
+  box-shadow: var(--shadow-card);
+}
+.dc-verdict-ico { display: inline-flex; margin-top: 1px; color: var(--d-grn); }
+.dc-verdict-label { font-weight: 700; font-size: 15px; color: var(--d-grn); }
+.dc-verdict[data-level='high'] { background: color-mix(in srgb, var(--d-red) 12%, var(--d-panel)); border-color: color-mix(in srgb, var(--d-red) 42%, transparent); }
+.dc-verdict[data-level='high'] .dc-verdict-ico,
+.dc-verdict[data-level='high'] .dc-verdict-label { color: var(--d-red); }
+.dc-verdict[data-level='medium'] { background: color-mix(in srgb, var(--d-amber) 12%, var(--d-panel)); border-color: color-mix(in srgb, var(--d-amber) 42%, transparent); }
+.dc-verdict[data-level='medium'] .dc-verdict-ico,
+.dc-verdict[data-level='medium'] .dc-verdict-label { color: var(--d-amber-deep); }
+.dc-verdict-body { flex: 1; min-width: 0; }
+.dc-verdict-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.dc-verdict-signals { display: inline-flex; flex-wrap: wrap; gap: 6px; }
+.dc-verdict-sig {
+  font-family: var(--d-mono); font-size: 10.5px; letter-spacing: 0.02em;
+  padding: 2px 8px; border-radius: 999px; background: var(--raise-2);
+  color: var(--d-dim); border: 1px solid var(--d-line);
+}
+.dc-verdict-summary { margin-top: 6px; color: var(--d-dim); font-size: 14px; line-height: 1.55; }
+
+/* ---- Law-checked chips ----------------------------------------------- */
+.dc-lawchecked { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 18px; }
+.dc-lawchecked-label {
+  display: inline-flex; align-items: center; gap: 6px; font-family: var(--d-mono);
+  font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--d-faint);
+}
+.dc-lawchecked-chips { display: inline-flex; flex-wrap: wrap; gap: 6px; }
+.dc-lawchecked-chip {
+  font-size: 12px; padding: 3px 9px; border-radius: 999px;
+  background: color-mix(in srgb, var(--d-grn) 10%, var(--d-panel));
+  border: 1px solid color-mix(in srgb, var(--d-grn) 30%, transparent);
+  color: color-mix(in srgb, var(--d-grn) 86%, var(--d-text));
+}
+
+/* ---- Citation chip (opens the real statute) -------------------------- */
+.dc-cite {
+  display: inline-flex; align-items: center; gap: 6px; margin-top: 8px;
+  padding: 4px 10px; border-radius: 8px; font-family: var(--d-mono);
+  font-size: 11.5px; text-decoration: none; background: var(--brand-soft);
+  color: var(--brand-deep); border: 1px solid color-mix(in srgb, var(--brand) 28%, transparent);
+  transition: background 140ms ease, transform 140ms ease;
+}
+.dc-cite:hover { background: color-mix(in srgb, var(--brand) 16%, var(--d-panel)); transform: translateY(-1px); }
+.dc-cite--static { cursor: default; }
+.dc-cite-txt { font-weight: 600; }
+
+/* ---- Violation (a problem grounded in a citation) -------------------- */
+.dc-violation { display: flex; gap: 12px; padding: 13px 0; border-top: 1px solid var(--d-line); }
+.dc-violation:first-child { border-top: none; padding-top: 2px; }
+.dc-violation-ico { color: var(--d-red); display: inline-flex; margin-top: 1px; flex: none; }
+.dc-violation-body { flex: 1; min-width: 0; }
+.dc-violation-top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.dc-violation-name { font-weight: 600; font-size: 14.5px; color: var(--d-text); }
+.dc-violation-sev {
+  font-family: var(--d-mono); font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 2px 7px; border-radius: 999px; white-space: nowrap;
+  background: color-mix(in srgb, var(--d-red) 12%, var(--d-panel)); color: var(--d-red);
+}
+.dc-violation[data-s='medium'] .dc-violation-ico { color: var(--d-amber-deep); }
+.dc-violation[data-s='medium'] .dc-violation-sev { color: var(--d-amber-deep); background: color-mix(in srgb, var(--d-amber) 14%, var(--d-panel)); }
+.dc-violation[data-s='low'] .dc-violation-ico,
+.dc-violation[data-s='low'] .dc-violation-sev { color: var(--d-faint); background: var(--raise-2); }
+.dc-violation-exp { margin-top: 4px; color: var(--d-dim); font-size: 13.5px; line-height: 1.55; }
+
+/* ---- Procedure timeline (what happens next) -------------------------- */
+.dc-procedure { list-style: none; margin: 0; padding: 0; }
+.dc-proc-step { display: flex; gap: 12px; padding: 11px 0; position: relative; }
+.dc-proc-step:not(:last-child)::before {
+  content: ''; position: absolute; left: 13px; top: 33px; bottom: -1px; width: 2px;
+  background: var(--d-line-2);
+}
+.dc-proc-num {
+  flex: none; width: 26px; height: 26px; border-radius: 999px; z-index: 1;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: var(--d-mono); font-size: 12px; font-weight: 600;
+  background: color-mix(in srgb, var(--d-live) 14%, var(--d-panel)); color: var(--d-live);
+  border: 1px solid color-mix(in srgb, var(--d-live) 34%, transparent);
+}
+.dc-proc-body { flex: 1; min-width: 0; padding-top: 2px; }
+.dc-proc-step-title { font-weight: 600; font-size: 14.5px; color: var(--d-text); }
+.dc-proc-detail { margin-top: 3px; color: var(--d-dim); font-size: 13.5px; line-height: 1.55; }
+.dc-whatif {
+  display: flex; gap: 10px; align-items: flex-start; margin-top: 14px; padding: 12px 14px;
+  border-radius: 12px; font-size: 14px; line-height: 1.55; color: var(--d-dim);
+  background: color-mix(in srgb, var(--d-red) 8%, var(--d-panel));
+  border: 1px solid color-mix(in srgb, var(--d-red) 26%, transparent);
+}
+.dc-whatif svg { color: var(--d-red); flex: none; margin-top: 2px; }
+.dc-whatif b { color: var(--d-text); }
+
+/* ---- RTL ------------------------------------------------------------- */
+[dir='rtl'] .dc-proc-step:not(:last-child)::before { left: auto; right: 13px; }
