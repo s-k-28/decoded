@@ -9,7 +9,9 @@ import { blobToDataUrl } from './url';
 
 const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY as string | undefined;
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined;
-const SCOPE = 'https://www.googleapis.com/auth/drive.readonly';
+// drive.file is a non-sensitive scope: it grants access only to the file the
+// user explicitly picks, so the app needs no Google verification review.
+const SCOPE = 'https://www.googleapis.com/auth/drive.file';
 
 export const driveConfigured = (): boolean => Boolean(API_KEY && CLIENT_ID);
 
