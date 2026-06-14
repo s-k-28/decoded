@@ -11,19 +11,19 @@ const EXAMPLES: { label: string; text: string }[] = [
     text: FLAGSHIP_TEXT,
   },
   {
-    label: 'Eviction notice',
+    label: 'Insurance denial',
     text:
-      'NOTICE TO PAY RENT OR QUIT. You owe 1450 dollars in rent for the month of May 2026. You must pay this amount in full or move out and surrender the premises within THREE (3) DAYS after you receive this notice, not counting weekends or legal holidays. If you fail to pay or move out, we will begin a court case to evict you and to recover possession, unpaid rent, damages, and costs. Payment must be made by certified check or money order to the landlord at the address above. Dated June 12, 2026.',
+      'EXPLANATION OF BENEFITS. This is not a bill. Member: J. Rivera. Claim #99213. Date of service 05/02/2026. Provider: Lakeshore Cardiology. Your claim was DENIED. Reason: services deemed not medically necessary. Plan paid: 0.00. Patient responsibility: 2,310.00. If you disagree with this decision you may contact member services.',
   },
   {
     label: 'Medical bill',
     text:
-      'STATEMENT OF ACCOUNT. Date of service: 04/18/2026. Provider: Regional Medical Center. Emergency room visit 2,840.00. Laboratory 612.00. Radiology 1,150.00. Adjustments -1,900.00. Insurance paid -1,402.00. PATIENT BALANCE DUE: 1,300.00. Payment is due within 30 days. Accounts not paid may be referred to a collection agency. Please remit payment to the address on the reverse of this statement.',
+      'STATEMENT. Date of service 04/18/2026. EMERGENCY ROOM visit at Regional Medical Center, an in-network hospital. The treating physician was OUT-OF-NETWORK. Your health plan paid the in-network rate. Remaining balance billed to patient: 3,400.00. Patient responsibility is due within 30 days. Please remit payment to the address on the statement.',
   },
   {
-    label: 'Benefits letter',
+    label: 'Eviction notice',
     text:
-      'NOTICE OF ACTION. Your application for SNAP food benefits has been DENIED. Reason: failure to provide requested verification of income by the due date. You have the right to request a fair hearing within 90 days of the date of this notice if you disagree with this decision. To request a hearing, contact your local office. You may reapply at any time.',
+      'NOTICE TO PAY RENT OR QUIT. You owe 1450 dollars in rent for the month of May 2026. You must pay this amount in full or move out and surrender the premises within THREE (3) DAYS after you receive this notice, not counting weekends or legal holidays. If you fail to pay or move out, we will begin a court case to evict you and to recover possession, unpaid rent, damages, and costs. Payment must be made by certified check or money order to the landlord at the address above. Dated June 12, 2026.',
   },
 ];
 
