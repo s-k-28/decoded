@@ -6,6 +6,12 @@ Auth for the token (it auto-provisions the OAuth client, so you never hand-build
 one) and gcloud for the API key. When both are set, the "Google Drive" button
 appears in the app on its own.
 
+> Status: for this project the Picker API key and the Firebase web app are already
+> provisioned on the Google Cloud project `aqueous-heading-480823-s4`, and the
+> values are in `.env.local`. The Drive button already shows in the app. The one
+> remaining step is enabling Google sign-in (Part A, step 3 below), which
+> auto-creates the OAuth client. After that, Drive is fully live.
+
 ## Part A: Firebase (the token)
 
 1. Go to https://console.firebase.google.com and create a project, or reuse one.

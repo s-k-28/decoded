@@ -18,8 +18,8 @@ gcloud config set project "$PROJECT"
 
 echo "Enabling the Drive and Picker APIs..."
 gcloud services enable drive.googleapis.com
-gcloud services enable pickerapi.googleapis.com 2>/dev/null ||
-  echo "Note: if 'pickerapi.googleapis.com' is rejected, enable 'Google Picker API' once in the Console."
+gcloud services enable picker.googleapis.com 2>/dev/null ||
+  echo "Note: if 'picker.googleapis.com' is rejected, enable 'Google Picker API' once in the Console."
 
 echo "Creating an API key for the Picker..."
 KEY=$(gcloud services api-keys create \
