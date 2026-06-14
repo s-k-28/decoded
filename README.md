@@ -1,36 +1,67 @@
 # Decoded
 
-Decoded explains confusing official documents in plain language and tells you what they mean, your deadlines, your rights, and what to do next. In your language, read aloud.
+Understand any official document. Decoded explains a confusing letter, bill, or notice in plain language and tells you what it means, your deadlines, your rights, and exactly what to do, in your language, read aloud.
 
-Paste or photograph an eviction notice, a medical bill, a benefits letter, or a debt collection letter, and Decoded returns a structured, plain-language breakdown at your chosen reading level and language: what the document is, what it means for you, the deadlines, the actions to take, your rights, any predatory or scam warning signs, a drafted reply, and where to get real human help.
+Live: https://dgsx9pmv.insforge.site
 
-Decoded explains documents. It is not legal or medical advice. It routes people to real help.
+Decoded explains documents. It is not legal or medical advice, and it routes people to real help.
+
+## What it does
+
+Paste the text or take a photo of an official document (an eviction notice, a medical bill, an insurance denial, a benefits letter, or a debt-collection letter). Decoded returns a structured, plain-language breakdown at the reading level and in the language you choose:
+
+- A summary of what the document is, and what it means for you.
+- The deadlines, sorted by urgency, each with the exact phrase from the document, plus a one-tap calendar reminder.
+- A checklist of what to do.
+- Your rights and options, grounded in the document.
+- Warnings about predatory, illegal, or scam signals.
+- A drafted reply you can edit, copy, and send.
+- A path to real human help.
+
+You can switch the language and the whole analysis re-renders in it. You can press Listen to have it read aloud. Saved analyses stay on your device.
 
 ## The problem
 
-Tens of millions of low-income, immigrant, elderly, disabled, and low-literacy people are handed legally and financially consequential documents written above their reading level and often not in their language. Misreading them costs people their homes, their money, and their benefits.
+Tens of millions of people are handed legally and financially consequential documents written above their reading level and often not in their language. Misreading one costs a home, a wrongful debt, a denied claim, or thousands in forfeited benefits.
 
-- 28% of US adults score at the lowest literacy level (NCES PIAAC 2023).
-- About 29.6 million people in the US have Limited English Proficiency.
-- Over half of eviction judgments in some states are defaults entered because the tenant missed a deadline they did not understand.
-- Insurers denied about 20% of in-network ACA claims in 2023, yet fewer than 1% of denials were appealed.
+- 28 percent of US adults read at the lowest literacy level (NCES PIAAC 2023).
+- About 29.6 million people in the US have limited English proficiency (Migration Policy Institute).
+- Insurers denied about 20 percent of in-network ACA claims in 2023, and fewer than 1 percent of denials were appealed (KFF).
 
-The proven intervention, plain language plus concrete next-step guidance, was rationed by human caseworkers. Decoded makes it instant, multilingual, and free at the point of need.
+The intervention that works, plain language paired with concrete next steps, was rationed by the small number of caseworkers and legal-aid lawyers who could give it. Decoded makes it instant, multilingual, and free.
 
 ## How it works
 
-A single vision-capable language model call, behind a server-side function, reads the document (pasted text or a photo) and returns strict JSON: summary, meaning for you, deadlines, actions, rights, red flags, a draft response, uncertainties, and get-help resources. The frontend renders it, reads it aloud, and can re-run it in any supported language or reading level.
+The core is one server-side function. The frontend sends the document, as text or an image, plus a target language and reading level, to an InsForge edge function. That function holds the AI key, builds a multimodal request, and calls a vision-capable model through the InsForge AI gateway. One model call reads the document (including from a phone photo), extracts the structure, and writes the result natively at the requested reading level and language. It returns strict JSON, which the frontend renders. Read-aloud uses the browser speech synthesis API. Saved history is stored locally with localStorage, so documents never leave the device.
 
-## Architecture
+A single vision call replaces a separate OCR step, extraction step, and translation step. It is faster, more robust to real-world photos, and simpler to keep reliable.
 
-- Frontend: Vite, React, TypeScript. No account required to use the core flow.
-- Backend: an InsForge edge function, `decode-document`, that holds the AI provider key server-side, builds the multimodal request, enforces strict JSON, and returns the result.
-- AI: a vision-capable model through the InsForge AI gateway. One call performs OCR, reading, extraction, multilingual generation, and reading-level control.
-- Accessibility: browser speech synthesis for read-aloud, reading-level and language controls, a larger-text mode, keyboard operation, and screen-reader support.
+## Project structure
+
+```
+functions/
+  decode-document.ts     Edge function: vision model call, strict JSON, defensive retry
+src/
+  App.tsx                Hash router (landing or decoder)
+  Landing.tsx            Marketing landing page
+  Decoder.tsx            The application
+  index.css              Styles
+  main.tsx               Entry
+  lib/
+    decode.ts            Typed client and the Decode Result schema
+    tts.ts               Read-aloud
+    ics.ts               Calendar reminder generation
+    history.ts           On-device saved history
+PRD.md                   Product requirements
+```
 
 ## Responsible AI
 
-Decoded explains and never advises. It never fabricates facts, dates, statutes, amounts, or rights, it surfaces what it is unsure about, it shows a persistent disclaimer, and it routes users to real human help (legal aid, 211, the agency named on the document).
+Decoded explains and never advises. It never fabricates facts, dates, statutes, amounts, or rights, it only states rights that are in the document or broadly established, it surfaces what it is unsure about, it shows a persistent disclaimer, and it routes users to real human help such as legal aid and 211. The AI key stays server-side in the edge function and never reaches the browser.
+
+## Privacy
+
+There is no account, and saved analyses are stored on the device with localStorage, not on a server. Sensitive documents stay with the person who holds them.
 
 ## Run locally
 
@@ -39,16 +70,10 @@ npm install
 npm run dev
 ```
 
-The frontend calls the deployed `decode-document` function. To run the function against your own InsForge project, deploy `functions/decode-document.ts` and set the function URL in `src/lib/decode.ts`.
+The frontend calls the deployed `decode-document` function. To run the function against your own InsForge project, deploy `functions/decode-document.ts`, set `OPENROUTER_API_KEY` as a function secret, and update the function URL in `src/lib/decode.ts`.
 
-## Project structure
+## Tech stack
 
-```
-functions/decode-document.ts   the analysis function (vision model, strict JSON)
-src/lib/decode.ts              the typed client and the Decode Result schema
-src/lib/tts.ts                 read-aloud
-src/App.tsx                    the application
-PRD.md                         the product requirements document
-```
+React, TypeScript, Vite, InsForge (edge functions, AI gateway), a vision-capable large language model, the Web Speech API.
 
 Built for STEMINATE Hacks 2026.
