@@ -1409,7 +1409,7 @@ async function decode(body: DecodeBody): Promise<unknown> {
     `Target language: ${language}. Target reading level: ${readingLevel}.\n\n` +
     corpusBlock +
     signalBlock +
-    `Read the document carefully and return the JSON object.`;
+    `Be brief: one or two short sentences per field, a short draft_response, and only the few most important items in each array. Read the document carefully and return the JSON object.`;
 
   let content: any;
   if (body.imageUrl) {
@@ -1431,7 +1431,7 @@ async function decode(body: DecodeBody): Promise<unknown> {
       ],
       response_format: { type: "json_object" },
       temperature: 0.2,
-      max_tokens: 3000,
+      max_tokens: 2000,
     });
 
   let parsed: any;

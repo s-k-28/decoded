@@ -310,9 +310,9 @@ Anything the tool is unsure about is surfaced, not hidden.
 | --- | --- | --- |
 | Paste text | Live | The text goes straight to the edge function. |
 | Photo upload | Live | The image is read by the vision model, no separate OCR. |
-| Take a picture | In development | Webcam capture with `getUserMedia`, and the camera on mobile. |
-| PDF upload | In development | Rendered to an image with pdf.js, then read by the vision model. |
-| Google Drive | In development | Picked with the Google Drive Picker, then read like any document. |
+| Take a picture | Live | On a phone, the photo input opens the camera directly. |
+| PDF upload | Planned | A pdf.js render path exists in the codebase and is being wired into the new interface. |
+| Google Drive | Planned | Drive Picker import is staged behind configuration. |
 
 ---
 
@@ -421,7 +421,6 @@ The frontend calls the deployed `decode-document` function. To run the function 
 
 ## Roadmap
 
-- **More input methods**: camera, PDF, Google Drive, URL, and a QR phone handoff.
 - **More cited verticals**: debt lawsuits and wage garnishment, utility shutoffs, immigration notices.
 - **More example states** for the housing and benefits corpora.
 - **Deadline math** computed from the document date.
