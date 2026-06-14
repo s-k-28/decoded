@@ -1,0 +1,7 @@
+# Frontend deploy only. The edge functions (Deno) deploy separately via the
+# InsForge functions CLI; the docs, scripts, and markdown are not part of the
+# built site. node_modules, dist, .git, .env*, .insforge are excluded by default.
+functions/
+scripts/
+docs/
+*.md
