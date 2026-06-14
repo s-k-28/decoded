@@ -56,5 +56,13 @@ export async function decode(input: DecodeInput): Promise<DecodeResult> {
   if (!res.ok || !data?.ok) {
     throw new Error(data?.error || `Could not read the document (status ${res.status}). Please try again.`);
   }
-  return data.result as DecodeResult;
+  const result = data.result as DecodeResult;
+  // Guard against a hollow success: if the analyzer fails its model call it can
+  // still answer ok:true with an empty Unknown shell. Treat that as a failure so
+  // the caller's safety-net fallback or error state engages, instead of silently
+  // rendering a blank report.
+  if (!result?.summary && result?.document_type === 'Unknown' && result?.confidence === 'low') {
+    throw new Error('The analyzer could not read this document right now. Please try again.');
+  }
+  return result;
 }

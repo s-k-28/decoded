@@ -127,7 +127,7 @@ export function modelLanguage(code: string): string {
 // How an entry reads in the dropdown: native script, plus the English name when
 // it differs, so it is findable both by the reader and by an English speaker.
 export function languageLabel(l: Language): string {
-  return l.native === l.english ? l.native : `${l.native} — ${l.english}`;
+  return l.native === l.english ? l.native : `${l.native} (${l.english})`;
 }
 
 // Right-to-left scripts, so the translated output can be laid out correctly.
