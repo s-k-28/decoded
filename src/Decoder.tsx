@@ -5,16 +5,7 @@ import { downloadReminder } from './lib/ics';
 import { loadHistory, saveToHistory, clearHistory, type HistoryItem } from './lib/history';
 import { FLAGSHIP_TEXT, FLAGSHIP_RESULT } from './lib/demoFallback';
 import { ImportPanel } from './components/ImportPanel';
-
-const LANGS = [
-  { code: 'en', name: 'English' },
-  { code: 'es', name: 'Espanol' },
-  { code: 'zh', name: 'Chinese' },
-  { code: 'vi', name: 'Tieng Viet' },
-  { code: 'fr', name: 'Francais' },
-  { code: 'ar', name: 'Arabic' },
-  { code: 'ht', name: 'Kreyol Ayisyen' },
-];
+import { LANGUAGES, modelLanguage, languageLabel, isRtl } from './lib/languages';
 
 const LEVELS = [
   { id: 'grade5', label: 'Simplest' },
@@ -41,7 +32,9 @@ export function Decoder({ onHome }: { onHome: () => void }) {
   const [result, setResult] = useState<DecodeResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [draft, setDraft] = useState('');
-  const [speaking, setSpeaking] = useState(false);
+  // Which section is currently being read aloud ('all' = the whole result, or a
+  // section key like 'summary'/'deadlines'). null means nothing is speaking.
+  const [speakingId, setSpeakingId] = useState<string | null>(null);
   const [history, setHistory] = useState<HistoryItem[]>(() => loadHistory());
   const [showHistory, setShowHistory] = useState(false);
   const resultRef = useRef<HTMLDivElement>(null);
@@ -65,7 +58,7 @@ export function Decoder({ onHome }: { onHome: () => void }) {
     const lg = over?.language ?? language;
     if (!canRun) return;
     stopSpeaking();
-    setSpeaking(false);
+    setSpeakingId(null);
     setLoading(true);
     setError(null);
     try {
@@ -73,8 +66,13 @@ export function Decoder({ onHome }: { onHome: () => void }) {
         text: tab === 'paste' ? text : undefined,
         imageUrl: tab === 'photo' ? imageUrl ?? undefined : undefined,
         readingLevel: rl,
-        language: lg,
+        // Send the full English language name so the model is never in doubt
+        // about which language to write in, especially for less common ones.
+        language: modelLanguage(lg),
       });
+      // Keep the BCP-47 code on the result so read-aloud and saved history stay
+      // consistent regardless of how the model echoes the language back.
+      r.language = lg;
       setResult(r);
       setDraft(r.draft_response || '');
       saveToHistory(r, tab === 'photo' ? 'image' : 'text');
@@ -104,34 +102,57 @@ export function Decoder({ onHome }: { onHome: () => void }) {
     if (result) run({ language: code });
   };
 
-  const sayAll = () => {
-    if (!result) return;
-    if (speaking) {
+  // Read one section aloud. Tapping the same section again stops it; tapping a
+  // different one stops the first and starts the new one.
+  const sayOne = (id: string, textToRead: string) => {
+    if (speakingId === id) {
       stopSpeaking();
-      setSpeaking(false);
+      setSpeakingId(null);
       return;
     }
+    const clean = textToRead.trim();
+    if (!clean) return;
+    stopSpeaking();
+    setSpeakingId(id);
+    speak(clean, language, () => setSpeakingId(null));
+  };
+
+  const sayAll = () => {
+    if (!result) return;
+    // Read only the model's already-translated fields, with no English section
+    // labels, so the spoken text is entirely in the chosen language.
     const scam =
       result.scam_risk && (result.scam_risk.level === 'high' || result.scam_risk.level === 'medium')
-        ? `Warning. ${result.scam_risk.level === 'high' ? 'High scam risk.' : 'Possible scam signals.'} ${result.scam_risk.summary}`
+        ? result.scam_risk.summary
         : '';
     const problems =
-      (result.violations?.length ?? 0) > 0
-        ? 'Problems with this letter. ' + result.violations!.map((v) => v.issue).join('. ')
-        : '';
+      (result.violations?.length ?? 0) > 0 ? result.violations!.map((v) => v.issue).join('. ') : '';
     const parts = [
       scam,
       result.summary,
       result.meaning_for_you,
       problems,
-      result.deadlines.length ? 'Deadlines. ' + result.deadlines.map((d) => `${d.label}. ${d.raw_text}`).join('. ') : '',
-      result.actions.length ? 'What to do. ' + result.actions.map((a) => a.task).join('. ') : '',
+      result.deadlines.length ? result.deadlines.map((d) => `${d.label}. ${d.raw_text}`).join('. ') : '',
+      result.actions.length ? result.actions.map((a) => a.task).join('. ') : '',
     ]
       .filter(Boolean)
       .join('. ');
-    setSpeaking(true);
-    speak(parts, language, () => setSpeaking(false));
+    sayOne('all', parts);
   };
+
+  // A small icon button for reading a single section aloud, shown in each card
+  // head. Hidden entirely when the browser has no speech support.
+  const listenBtn = (id: string, textToRead: string) =>
+    supportsTTS() && textToRead.trim() ? (
+      <button
+        className="listen-mini"
+        data-on={speakingId === id}
+        onClick={() => sayOne(id, textToRead)}
+        aria-label={speakingId === id ? 'Stop reading this section' : 'Read this section aloud'}
+      >
+        <Icon.Speak /> {speakingId === id ? 'Stop' : 'Listen'}
+      </button>
+    ) : null;
 
   const openHistory = (item: HistoryItem) => {
     setResult(item.result);
@@ -148,7 +169,7 @@ export function Decoder({ onHome }: { onHome: () => void }) {
     setImageUrl(null);
     setError(null);
     stopSpeaking();
-    setSpeaking(false);
+    setSpeakingId(null);
   };
 
   return (
@@ -230,8 +251,8 @@ export function Decoder({ onHome }: { onHome: () => void }) {
               <div className="control">
                 <span className="control-label">Language</span>
                 <select className="select" value={language} onChange={(e) => changeLang(e.target.value)} aria-label="Language">
-                  {LANGS.map((l) => (
-                    <option key={l.code} value={l.code}>{l.name}</option>
+                  {LANGUAGES.map((l) => (
+                    <option key={l.code} value={l.code}>{languageLabel(l)}</option>
                   ))}
                 </select>
               </div>
@@ -244,8 +265,8 @@ export function Decoder({ onHome }: { onHome: () => void }) {
         {error && !loading && <div className="error-box" role="alert">{error}</div>}
 
         {result && !loading && (
-          <div className="result" ref={resultRef}>
-            <Verdict r={result} speaking={speaking} onSpeak={sayAll} canSpeak={supportsTTS()} />
+          <div className="result" ref={resultRef} dir={isRtl(language) ? 'rtl' : 'ltr'}>
+            <Verdict r={result} speaking={speakingId === 'all'} onSpeak={sayAll} canSpeak={supportsTTS()} />
 
             {result.confidence === 'low' && (
               <div className="uncertain">
@@ -254,14 +275,14 @@ export function Decoder({ onHome }: { onHome: () => void }) {
             )}
 
             <section className="card card--summary">
-              <div className="card-head"><span className="card-icon"><Icon.Doc /></span><span className="card-title">What this is</span></div>
+              <div className="card-head"><span className="card-icon"><Icon.Doc /></span><span className="card-title">What this is</span><span className="card-title-spacer" />{listenBtn('summary', `${result.summary}. ${result.meaning_for_you}`)}</div>
               <p className="summary-lead">{result.summary}</p>
               <p className="summary-meaning">{result.meaning_for_you}</p>
             </section>
 
             {(result.violations?.length ?? 0) > 0 && (
               <section className="card card--violations">
-                <div className="card-head"><span className="card-icon"><Icon.Flag /></span><span className="card-title">Problems with this letter</span></div>
+                <div className="card-head"><span className="card-icon"><Icon.Flag /></span><span className="card-title">Problems with this letter</span><span className="card-title-spacer" />{listenBtn('violations', result.violations!.map((v) => `${v.issue}. ${v.explanation}`).join('. '))}</div>
                 {result.violations!.map((v, i) => (
                   <div className="row" key={i}>
                     <span className="row-dot row-dot--critical" />
@@ -279,7 +300,7 @@ export function Decoder({ onHome }: { onHome: () => void }) {
 
             {result.deadlines.length > 0 && (
               <section className="card card--deadlines">
-                <div className="card-head"><span className="card-icon"><Icon.Clock /></span><span className="card-title">Deadlines</span></div>
+                <div className="card-head"><span className="card-icon"><Icon.Clock /></span><span className="card-title">Deadlines</span><span className="card-title-spacer" />{listenBtn('deadlines', result.deadlines.map((d) => `${d.label}${d.date ? `, ${d.date}` : ''}. ${d.raw_text}`).join('. '))}</div>
                 {result.deadlines.map((d, i) => (
                   <div className="row" key={i}>
                     <span className={`row-dot row-dot--${d.urgency}`} />
@@ -300,7 +321,7 @@ export function Decoder({ onHome }: { onHome: () => void }) {
 
             {result.actions.length > 0 && (
               <section className="card card--actions">
-                <div className="card-head"><span className="card-icon"><Icon.Check /></span><span className="card-title">What to do</span></div>
+                <div className="card-head"><span className="card-icon"><Icon.Check /></span><span className="card-title">What to do</span><span className="card-title-spacer" />{listenBtn('actions', result.actions.map((a) => `${a.task}. ${a.why}`).join('. '))}</div>
                 {result.actions.map((a, i) => (
                   <div className="row" key={i}>
                     <span className="check" aria-hidden="true" />
@@ -312,7 +333,7 @@ export function Decoder({ onHome }: { onHome: () => void }) {
 
             {result.rights.length > 0 && (
               <section className="card card--rights">
-                <div className="card-head"><span className="card-icon"><Icon.Shield /></span><span className="card-title">Your rights</span></div>
+                <div className="card-head"><span className="card-icon"><Icon.Shield /></span><span className="card-title">Your rights</span><span className="card-title-spacer" />{listenBtn('rights', result.rights.map((r) => (r.basis ? `${r.right}. ${r.basis}` : r.right)).join('. '))}</div>
                 {result.rights.map((r, i) => (
                   <div className="row" key={i}>
                     <span className="row-dot" style={{ background: 'var(--grn)' }} />
@@ -332,7 +353,7 @@ export function Decoder({ onHome }: { onHome: () => void }) {
 
             {result.red_flags.length > 0 ? (
               <section className="card card--flags">
-                <div className="card-head"><span className="card-icon"><Icon.Flag /></span><span className="card-title">Watch out</span></div>
+                <div className="card-head"><span className="card-icon"><Icon.Flag /></span><span className="card-title">Watch out</span><span className="card-title-spacer" />{listenBtn('flags', result.red_flags.map((f) => `${f.flag}. ${f.explanation}`).join('. '))}</div>
                 {result.red_flags.map((f, i) => (
                   <div className="row" key={i}>
                     <span className="row-dot" style={{ background: 'var(--red)' }} />
@@ -345,7 +366,7 @@ export function Decoder({ onHome }: { onHome: () => void }) {
             )}
 
             <section className="card card--draft">
-              <div className="card-head"><span className="card-icon"><Icon.Mail /></span><span className="card-title">Draft a reply</span></div>
+              <div className="card-head"><span className="card-icon"><Icon.Mail /></span><span className="card-title">Draft a reply</span><span className="card-title-spacer" />{listenBtn('draft', draft)}</div>
               <textarea className="draft-text" value={draft} onChange={(e) => setDraft(e.target.value)} aria-label="Draft reply" />
               <div className="draft-foot">
                 <button className="btn btn--sm" onClick={() => navigator.clipboard?.writeText(draft)}>Copy</button>

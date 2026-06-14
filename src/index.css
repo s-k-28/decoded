@@ -159,6 +159,14 @@ button { font-family: inherit; cursor: pointer; }
 .input-area:focus { border-color: var(--grn-line); box-shadow: 0 0 0 3px var(--grn-dim); }
 .input-area::placeholder { color: var(--text-3); }
 
+.file-note {
+  display: flex; align-items: center; gap: 7px;
+  margin-bottom: 10px; padding: 8px 12px; border-radius: 10px;
+  background: var(--green-soft); color: var(--green-deep);
+  font-size: 13px; line-height: 1.4;
+}
+.file-note strong { font-weight: 600; }
+
 .dropzone {
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
   min-height: 176px; padding: 24px; text-align: center;
@@ -310,11 +318,23 @@ button { font-family: inherit; cursor: pointer; }
 .card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 13px; }
 .card-icon { width: 28px; height: 28px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; flex: none; background: var(--raised); color: var(--text-2); border: 1px solid var(--line-2); }
 .card-title { font-family: var(--mono); font-size: 11.5px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-2); }
+.card-title-spacer { flex: 1; }
 
 .card--summary { grid-column: 1 / -1; }
 .card--summary .card-icon { background: var(--grn-dim); color: var(--grn); border-color: var(--grn-line); }
 .summary-lead { font-family: var(--display); font-size: clamp(19px, 2.4vw, 23px); line-height: 1.32; color: var(--text); letter-spacing: -0.01em; }
 .summary-meaning { margin-top: 12px; font-size: 16px; color: var(--text-2); line-height: 1.6; }
+
+/* Compact per-section read-aloud button, sits at the right edge of a card head.
+   Styled to match .speak-btn in the dark theme. */
+.listen-mini {
+  display: inline-flex; align-items: center; gap: 6px; height: 27px; padding: 0 10px;
+  border: 1px solid var(--line-2); border-radius: 8px; background: var(--panel); color: var(--text-2);
+  font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.03em; flex: none;
+}
+.listen-mini:hover { border-color: var(--grn-line); color: var(--grn); }
+.listen-mini[data-on='true'] { background: var(--grn); color: #04130d; border-color: var(--grn); }
+.listen-mini svg { width: 13px; height: 13px; }
 
 .row { display: flex; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); }
 .row:first-of-type { border-top: none; }
