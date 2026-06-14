@@ -3,6 +3,8 @@ dist
 STEMINATE_WIN_PLAN.md
 DEVPOST.md
 DEMO_SCRIPT.md
+AGENTS.md
+.env.local
 .insforge
 .env
 .env.*
