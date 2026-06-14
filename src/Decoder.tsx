@@ -137,7 +137,7 @@ export function Decoder({ onHome }: { onHome: () => void }) {
     setResult(item.result);
     setDraft(item.result.draft_response || '');
     setLanguage(item.language);
-    setReadingLevel(item.reading_level);
+    setReadingLevel(item.readingLevel);
     setShowHistory(false);
     setError(null);
   };
