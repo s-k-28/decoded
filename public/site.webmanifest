@@ -1,0 +1,16 @@
+{
+  "name": "Decoded",
+  "short_name": "Decoded",
+  "description": "Decoded reads a confusing official document in plain language and checks it against real federal and state law, with a citation for every legal claim.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f1e8",
+  "theme_color": "#c4562f",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    }
+  ]
+}

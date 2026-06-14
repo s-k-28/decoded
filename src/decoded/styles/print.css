@@ -1,0 +1,85 @@
+/* print.css
+   Print styles for the decoded report (Print summary button).
+   Goal: a clean, ink-economical, paper-friendly rendering of the report.
+   Everything is scoped to @media print so screen rendering is untouched. */
+
+@media print {
+  /* White page, near-black text for ink economy.
+     Strip background blooms and shadows from the warm light theme. */
+  html,
+  body {
+    background: #ffffff !important;
+    color: #1a1a1a !important;
+  }
+
+  /* Remove decorative shadows and background images on cards and surfaces. */
+  .dc-result,
+  .dc-rail,
+  .dc-section,
+  .dc-result-top,
+  .dc-help,
+  .dc-flag,
+  .dc-violation,
+  .dc-meaning,
+  .dc-action,
+  .dc-right,
+  .dc-dl {
+    box-shadow: none !important;
+    background-image: none !important;
+  }
+
+  /* Hide interactive chrome that has no meaning on paper. */
+  .dc-field,            /* background blooms behind input fields */
+  .dc-textbtn,          /* header tools button */
+  .dc-rerun,            /* reading-level / language control bar */
+  .dc-section-listen,   /* per-section listen button */
+  .dc-listen,           /* top Listen button */
+  .dc-footer-actions,   /* bottom action buttons container */
+  .dc-decode,           /* decode buttons */
+  .dc-ghostbtn,         /* ghost buttons */
+  .dc-select {          /* dropdown selects (reading level, language) */
+    display: none !important;
+  }
+
+  /* Report area takes the full page width, no rounded card framing. */
+  .dc-result,
+  .dc-rail {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  /* Citation chips are <a> elements. Append the URL so the reference
+     survives once the document is on paper (links are not clickable there). */
+  .dc-cite::after {
+    content: " (" attr(href) ")";
+    font-size: 0.85em;
+  }
+
+  /* Keep each report section together so it does not split across a page. */
+  .dc-section {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* The draft reply lives in a textarea. Let it grow to its full content
+     so the entire drafted reply prints, not just the visible scroll area. */
+  .dc-draft-ta {
+    height: auto !important;
+    min-height: unset !important;
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
+    color: #1a1a1a !important;
+    overflow: visible !important;
+    resize: none !important;
+  }
+
+  /* Persistent legal disclaimer and the footer note must remain visible. */
+  .dc-disclaimer,
+  .dc-foot {
+    display: block !important;
+  }
+}

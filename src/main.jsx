@@ -27,6 +27,9 @@ import './decoded/styles/theme.css';
 import './decoded/styles/landing.css';
 // Cited-verifier sections (scam verdict, violations, citations, procedure)
 import './decoded/styles/extend.css';
+// Print report stylesheet and accessibility polish
+import './decoded/styles/print.css';
+import './decoded/styles/a11y.css';
 
 import { DecodedApp } from './decoded/app.jsx';
 

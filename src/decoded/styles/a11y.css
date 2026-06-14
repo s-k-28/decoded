@@ -1,0 +1,76 @@
+/* a11y.css
+   Accessibility and polish refinements. Additive only.
+   Safe to layer on top of the existing design: it does not change
+   layout or recolor existing components beyond focus and selection. */
+
+/* Keyboard focus ring.
+   Show a strong, always-visible ring for keyboard users via :focus-visible.
+   Keep the default off only for pointer focus, so mouse clicks stay quiet
+   while keyboard navigation stays obvious. */
+a:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible,
+[tabindex]:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--focus-ring, #c4562f);
+  outline-offset: 2px;
+  border-radius: inherit;
+}
+
+/* Remove the default outline only when focus is not keyboard focus
+   (typically pointer focus). The :focus-visible rule above keeps the
+   ring for keyboard users. */
+a:focus:not(:focus-visible),
+button:focus:not(:focus-visible),
+[role="button"]:focus:not(:focus-visible),
+[tabindex]:focus:not(:focus-visible),
+input:focus:not(:focus-visible),
+textarea:focus:not(:focus-visible),
+select:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Respect reduced motion.
+   Neutralize entrance animations, blooms, and smooth scrolling for users
+   who opt out, without removing the elements themselves. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Visually hidden utility.
+   Standard clip pattern: hides content visually while keeping it available
+   to assistive technology. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Comfortable tap target for the primary decode button on touch devices.
+   Conservative: applies a minimum height only, on coarse pointers only,
+   so it does not affect desktop layout or small icon buttons. */
+@media (pointer: coarse) {
+  .dc-decode {
+    min-height: 40px;
+  }
+}
+
+/* Soft brand selection tint. */
+::selection {
+  background: color-mix(in srgb, var(--brand) 22%, transparent);
+}
