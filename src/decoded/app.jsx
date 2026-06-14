@@ -10,6 +10,12 @@ import { DECODED as D } from './demoData.js';
 import { DecodedIcons as I } from './icons.jsx';
 import { DecodedUI as U } from './components.jsx';
 import { DecodedLanding as L } from './landing.jsx';
+import { Comparison } from './extra/Comparison.jsx';
+import { LawWeCheck } from './extra/LawWeCheck.jsx';
+import { WhoItHelps } from './extra/WhoItHelps.jsx';
+import { Trust } from './extra/Trust.jsx';
+import { Faq } from './extra/Faq.jsx';
+import { ResultActions } from './extra/ResultActions.jsx';
 const { useState, useEffect, useRef, useCallback } = React;
 const h = React.createElement;
 
@@ -553,9 +559,14 @@ const h = React.createElement;
       ) : null
       ),
       L.ProductPeek ? h(L.ProductPeek, null) : null,
+      h(Comparison, null),
       L.HowItWorks ? h(L.HowItWorks, null) : null,
+      h(LawWeCheck, null),
       L.FeatureRibbon ? h(L.FeatureRibbon, null) : null,
+      h(WhoItHelps, null),
+      h(Trust, null),
       L.Proof ? h(L.Proof, null) : null,
+      h(Faq, null),
       L.ClosingCTA ? h(L.ClosingCTA, { onJump: jumpToConsole, onExample: () => decodeExampleNow(D.EXAMPLES[0]) }) : null
     );
   }
@@ -727,6 +738,8 @@ const h = React.createElement;
           num: num(), title: t.sDraft, accent: 'var(--d-amber)', icon: h(I.PenLine, { size: 17 }),
           listenable: false,
         }, h(U.DraftEditor, { value: draft, onChange: setDraft, tag: t.draftTag, copyLabel: t.copy, copiedLabel: t.copied })),
+
+        h(ResultActions, { result: r }),
 
         // Uncertainties (conditional)
         (r.uncertainties || []).length ? h(U.Section, {
