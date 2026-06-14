@@ -277,13 +277,14 @@ const h = React.createElement;
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }, [pushHistory, text, mode]);
 
-    // resolve a decode result: the live InsForge decode first, then a seeded
-    // demo fallback for the example documents so a live failure still shows a
-    // real result (the demo safety net).
+    // resolve a decode result. The built-in examples have a curated, verified
+    // seed (a full cited result): serve it instantly so the demo is fast and
+    // reliable and never waits on a slow model. Pasted text and photos go to the
+    // live analyzer, with the example seed as a safety net if the model fails.
     const resolve = useCallback(async ({ text: src, imageUrl, exId, lv, lg }) => {
+      if (exId && D.hasSeed(exId, lg)) return D.getSeed(exId, lg, lv);
       const live = await liveDecode({ text: src, imageUrl, level: lv, lang: lg });
       if (live) return live;
-      if (exId && D.hasSeed(exId, lg)) return D.getSeed(exId, lg, lv);
       if (exId) return Object.assign({}, D.getSeed(exId, 'en', lv) || {}, { language: lg, reading_level: lv });
       return null;
     }, []);

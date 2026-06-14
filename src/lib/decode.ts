@@ -47,11 +47,27 @@ export interface DecodeInput {
 }
 
 export async function decode(input: DecodeInput): Promise<DecodeResult> {
-  const res = await fetch(FN_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(input),
-  });
+  // Hard timeout: the analyzer can be slow (a free model can queue), but it must
+  // never spin forever. Abort after 60s so the caller's fallback or error state
+  // engages instead of the loading screen hanging.
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 60000);
+  let res: Response;
+  try {
+    res = await fetch(FN_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(input),
+      signal: ctrl.signal,
+    });
+  } catch (e) {
+    if ((e as Error)?.name === 'AbortError') {
+      throw new Error('This is taking longer than expected. Please try again.');
+    }
+    throw new Error('Could not reach the analyzer. Check your connection and try again.');
+  } finally {
+    clearTimeout(timer);
+  }
   const data = await res.json().catch(() => null);
   if (!res.ok || !data?.ok) {
     throw new Error(data?.error || `Could not read the document (status ${res.status}). Please try again.`);
