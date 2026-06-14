@@ -1,7 +1,7 @@
 const STEPS = [
-  { n: '01', title: 'Add your document', body: 'Paste the text or take a photo of any official letter, bill, or notice. No account, no upload of your private documents to keep.' },
-  { n: '02', title: 'Decoded reads it', body: 'It explains what the document is and what it means for you, finds the deadlines, lists your rights, and flags anything predatory or like a scam.' },
-  { n: '03', title: 'Know what to do', body: 'Get a clear checklist, a drafted reply, a calendar reminder for the deadline, and a path to real human help, all in your language, read aloud.' },
+  { n: '01', title: 'Add your document', body: 'Paste the text, take a photo, upload a PDF, or import from Google Drive. No account, and your documents stay on your device.' },
+  { n: '02', title: 'It checks it against the law', body: 'Decoded explains the document, checks a debt or medical letter against real federal law, and flags the violations and scam signals, with a citation you can open for every claim.' },
+  { n: '03', title: 'Know what to do next', body: 'A clear checklist of your next steps, a drafted reply, a calendar reminder for the deadline, and a path to real human help, in your language and read aloud.' },
 ];
 
 const HELPS = [
@@ -33,11 +33,12 @@ export function Landing({ onTry }: { onTry: () => void }) {
       </header>
 
       <section className="lp-hero">
-        <span className="lp-eyebrow">AI for social good</span>
-        <h1 className="lp-h1">Understand any official document.</h1>
+        <span className="lp-eyebrow"><span className="status-dot" /> AI for social good</span>
+        <h1 className="lp-h1">Check any official document <em>against the law</em>.</h1>
         <p className="lp-sub">
-          Paste or photograph an eviction notice, a medical bill, or a benefits letter. Decoded tells you what it
-          means, your deadlines, your rights, and exactly what to do, in your language, read aloud.
+          Paste it, photograph it, upload a PDF, or import from Drive. Decoded explains the letter, checks it against
+          real federal law, and shows your rights, the problems, and the scams, with a citation for every claim, in your
+          language and read aloud.
         </p>
         <div className="lp-cta">
           <button className="btn" onClick={onTry}>Try Decoded free</button>
@@ -114,7 +115,7 @@ export function Landing({ onTry }: { onTry: () => void }) {
 
       <footer className="lp-foot">
         <span>Decoded</span>
-        <span>Understand any official document. Built for STEMINATE Hacks 2026.</span>
+        <span>Check any official document against the law. Built for STEMINATE Hacks 2026.</span>
       </footer>
     </div>
   );

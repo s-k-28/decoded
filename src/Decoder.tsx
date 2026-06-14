@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { decode, type DecodeResult } from './lib/decode';
 import { speak, stopSpeaking, supportsTTS } from './lib/tts';
 import { downloadReminder } from './lib/ics';
@@ -43,6 +43,14 @@ const LEVELS = [
   { id: 'plain', label: 'Plain' },
 ];
 
+const SCAN_STEPS = [
+  'Reading the document',
+  'Identifying the document type',
+  'Checking it against the law',
+  'Compiling your rights and the problems',
+  'Finalizing the report',
+];
+
 export function Decoder({ onHome }: { onHome: () => void }) {
   const [large, setLarge] = useState(false);
   const [tab, setTab] = useState<'paste' | 'photo'>('paste');
@@ -58,6 +66,19 @@ export function Decoder({ onHome }: { onHome: () => void }) {
   const [history, setHistory] = useState<HistoryItem[]>(() => loadHistory());
   const [showHistory, setShowHistory] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const resultRef = useRef<HTMLDivElement>(null);
+  const [scanStep, setScanStep] = useState(0);
+
+  useEffect(() => {
+    if (result && resultRef.current) resultRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [result]);
+
+  useEffect(() => {
+    if (!loading) return;
+    setScanStep(0);
+    const id = setInterval(() => setScanStep((s) => Math.min(s + 1, SCAN_STEPS.length - 1)), 650);
+    return () => clearInterval(id);
+  }, [loading]);
 
   const canRun = (tab === 'paste' && text.trim().length > 0) || (tab === 'photo' && !!imageUrl);
 
@@ -168,6 +189,7 @@ export function Decoder({ onHome }: { onHome: () => void }) {
           <span className="brand-mark">D</span>
           <span className="brand-name">Decoded</span>
         </button>
+        <span className="status-pill"><span className="status-dot" /> Analyzer online</span>
         <span className="topbar-spacer" />
         {history.length > 0 && (
           <button className="topbar-toggle" aria-pressed={showHistory} onClick={() => setShowHistory((v) => !v)}>
@@ -298,51 +320,17 @@ export function Decoder({ onHome }: { onHome: () => void }) {
           </>
         )}
 
-        {loading && (
-          <div className="loading" role="status">
-            <div className="spinner" aria-hidden="true" />
-            <div className="loading-text">Reading your document...</div>
-          </div>
-        )}
+        {loading && <Scan step={scanStep} />}
 
         {error && !loading && <div className="error-box" role="alert">{error}</div>}
 
         {result && !loading && (
-          <div className="result">
-            <div className="result-head">
-              <span className="result-type">{result.document_type}</span>
-              <span className={`badge badge--conf-${result.confidence}`}>{result.confidence} confidence</span>
-              {supportsTTS() && (
-                <button className="speak-btn" data-on={speaking} onClick={sayAll}>
-                  <Icon.Speak /> {speaking ? 'Stop' : 'Listen'}
-                </button>
-              )}
-            </div>
-
-            {(result.law_checked?.length ?? 0) > 0 && (
-              <div className="law-badge">
-                <Icon.Shield /> Checked against {result.law_checked!.join(', ')}
-              </div>
-            )}
+          <div className="result" ref={resultRef}>
+            <Verdict r={result} speaking={speaking} onSpeak={sayAll} canSpeak={supportsTTS()} />
 
             {result.confidence === 'low' && (
               <div className="uncertain">
                 <strong>Decoded had trouble reading parts of this.</strong> Please check the original document, and consider getting help from one of the resources below.
-              </div>
-            )}
-
-            {result.scam_risk && (result.scam_risk.level === 'high' || result.scam_risk.level === 'medium') && (
-              <div className={`scam-banner scam-banner--${result.scam_risk.level}`} role="alert">
-                <span className="scam-banner-icon"><Icon.Flag /></span>
-                <div className="scam-banner-body">
-                  <strong>{result.scam_risk.level === 'high' ? 'High scam risk' : 'Possible scam signals'}</strong>
-                  {result.scam_risk.summary && <p>{result.scam_risk.summary}</p>}
-                  {result.scam_risk.signals.length > 0 && (
-                    <ul className="scam-signals">
-                      {result.scam_risk.signals.map((s, i) => <li key={i}>{s}</li>)}
-                    </ul>
-                  )}
-                </div>
               </div>
             )}
 
@@ -408,7 +396,7 @@ export function Decoder({ onHome }: { onHome: () => void }) {
                 <div className="card-head"><span className="card-icon"><Icon.Shield /></span><span className="card-title">Your rights</span></div>
                 {result.rights.map((r, i) => (
                   <div className="row" key={i}>
-                    <span className="row-dot" style={{ background: 'var(--green)' }} />
+                    <span className="row-dot" style={{ background: 'var(--grn)' }} />
                     <div className="row-body">
                       <div className="row-title">{r.right}</div>
                       {r.basis && <div className="row-note">{r.basis}</div>}
@@ -455,7 +443,7 @@ export function Decoder({ onHome }: { onHome: () => void }) {
                 <div className="card-head"><span className="card-icon"><Icon.Help /></span><span className="card-title">Get real help</span></div>
                 {result.get_help.map((h, i) => (
                   <div className="help-item" key={i}>
-                    <span className="row-dot" style={{ background: 'var(--green)', marginTop: 7 }} />
+                    <span className="row-dot" style={{ background: 'var(--grn)', marginTop: 7 }} />
                     <div className="row-body"><div className="help-name">{h.resource}</div><div className="help-note">{h.note}</div></div>
                   </div>
                 ))}
@@ -472,6 +460,76 @@ export function Decoder({ onHome }: { onHome: () => void }) {
         documents stay on your device.
       </footer>
     </div>
+  );
+}
+
+function Scan({ step }: { step: number }) {
+  return (
+    <div className="scan" role="status" aria-label="Analyzing the document">
+      <div className="scan-viz">
+        <div className="scan-doc" />
+        <div className="scan-line" />
+      </div>
+      <ol className="scan-steps">
+        {SCAN_STEPS.map((s, i) => (
+          <li className={`scan-step${i <= step ? ' on' : ''}`} style={{ animationDelay: `${i * 0.1}s` }} key={s}>
+            {s}
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
+function Verdict({ r, speaking, onSpeak, canSpeak }: { r: DecodeResult; speaking: boolean; onSpeak: () => void; canSpeak: boolean }) {
+  const v = r.violations?.length ?? 0;
+  const rights = r.rights?.length ?? 0;
+  const scam = r.scam_risk?.level ?? 'none';
+  const lawed = (r.law_checked?.length ?? 0) > 0;
+  let tone: 'alarm' | 'warn' | 'ok' | 'neutral' = 'neutral';
+  let headline = 'Here is what this means';
+  if (v > 0 || scam === 'high') {
+    tone = 'alarm';
+    headline = v > 0 ? 'This document has legal problems' : 'High scam risk';
+  } else if (scam === 'medium') {
+    tone = 'warn';
+    headline = 'Possible scam signals';
+  } else if (lawed) {
+    tone = 'ok';
+    headline = 'No legal problems found';
+  }
+  const meter = tone === 'alarm' ? 92 : tone === 'warn' ? 60 : tone === 'ok' ? 14 : 0;
+  const signals = r.scam_risk?.signals ?? [];
+  return (
+    <section className={`verdict verdict--${tone}`} aria-live="polite">
+      <div className="verdict-main">
+        <span className="verdict-eyebrow">
+          <Icon.Shield />
+          {lawed ? `Checked against ${r.law_checked!.join(', ')}` : 'Analysis complete'}
+        </span>
+        <h2 className="verdict-headline">{headline}</h2>
+        <p className="verdict-sub">{r.meaning_for_you || r.summary}</p>
+        {(tone === 'alarm' || tone === 'warn') && signals.length > 0 && (
+          <div className="verdict-signals">
+            {signals.map((s, i) => <span className="vsignal" key={i}>{s}</span>)}
+          </div>
+        )}
+        <div className="verdict-type">{r.document_type} / {r.confidence} confidence</div>
+      </div>
+      <div className="verdict-aside">
+        {canSpeak && (
+          <button className="speak-btn" data-on={speaking} onClick={onSpeak}>
+            <Icon.Speak /> {speaking ? 'Stop' : 'Listen'}
+          </button>
+        )}
+        <div className="meter"><div className={`meter-fill meter-fill--${tone}`} style={{ width: `${meter}%` }} /></div>
+        <div className="verdict-stats">
+          {v > 0 && <span className="vstat vstat--red"><b>{v}</b> {v === 1 ? 'problem' : 'problems'}</span>}
+          {rights > 0 && <span className="vstat vstat--grn"><b>{rights}</b> {rights === 1 ? 'right' : 'rights'}</span>}
+          <span className={`vstat ${scam === 'high' ? 'vstat--red' : scam === 'medium' ? 'vstat--amber' : 'vstat--grn'}`}>scam: {scam}</span>
+        </div>
+      </div>
+    </section>
   );
 }
 
