@@ -6,6 +6,7 @@
 // and enables the Google Picker API and Google Drive API on the Cloud project.
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { blobToDataUrl } from './url';
+import { firebaseConfigured, getDriveTokenViaFirebase } from './firebase';
 
 const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY as string | undefined;
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined;
@@ -13,7 +14,9 @@ const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined;
 // user explicitly picks, so the app needs no Google verification review.
 const SCOPE = 'https://www.googleapis.com/auth/drive.file';
 
-export const driveConfigured = (): boolean => Boolean(API_KEY && CLIENT_ID);
+// The Picker needs an API key. The OAuth token can come from a hand-made OAuth
+// client (GIS) or from Firebase Auth, whichever is configured.
+export const driveConfigured = (): boolean => Boolean(API_KEY && (CLIENT_ID || firebaseConfigured()));
 
 function loadScript(src: string): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -39,6 +42,7 @@ async function ensurePicker(): Promise<void> {
 
 let tokenClient: any = null;
 async function getToken(): Promise<string> {
+  if (firebaseConfigured()) return getDriveTokenViaFirebase();
   await loadScript('https://accounts.google.com/gsi/client');
   const google = (window as any).google;
   return new Promise((resolve, reject) => {
