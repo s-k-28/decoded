@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { FLAGSHIP_TEXT } from '../lib/demoFallback';
 import { pdfToImage } from '../lib/pdf';
+import { normalizeImage } from '../lib/image';
 import { fetchAsDataUrl } from '../lib/url';
 import { pickFromDrive, driveConfigured } from '../lib/drive';
 import { qrDataUrl } from '../lib/qr';
@@ -78,8 +79,12 @@ export function ImportPanel({ text, setText, imageUrl, setImageUrl, tab, setTab,
   };
 
   const handleFile = (f: File) => {
+    if (f.size > 25 * 1024 * 1024) {
+      setErr('That file is too large. Please use one under 25 MB.');
+      return;
+    }
     if (f.type === 'application/pdf') return ingest(() => pdfToImage(f), 'Reading the PDF');
-    if (f.type.startsWith('image/')) return ingest(() => fileToDataUrl(f), 'Loading the image');
+    if (f.type.startsWith('image/')) return ingest(async () => normalizeImage(await fileToDataUrl(f)), 'Loading the image');
     setErr('Please choose an image or a PDF.');
   };
 
@@ -265,7 +270,7 @@ export function ImportPanel({ text, setText, imageUrl, setImageUrl, tab, setTab,
       <input ref={fileRef} type="file" accept="image/*,application/pdf" hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); e.target.value = ''; }} />
       <input ref={mobileCamRef} type="file" accept="image/*" capture="environment" hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); e.target.value = ''; }} />
 
-      {showCam && <CameraCapture onCapture={(d) => { useImage(d); setShowCam(false); }} onClose={() => setShowCam(false)} />}
+      {showCam && <CameraCapture onCapture={(d) => { setShowCam(false); ingest(() => normalizeImage(d), 'Processing the photo'); }} onClose={() => setShowCam(false)} />}
 
       {qr && (
         <div className="qr-overlay" role="dialog" aria-modal="true" aria-label="Scan with your phone" onClick={() => setQr(null)}>
