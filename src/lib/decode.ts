@@ -10,6 +10,9 @@ export interface Violation { issue: string; citation: string | null; source_url:
 export interface ScamRisk { level: 'high' | 'medium' | 'low' | 'none'; signals: string[]; summary: string; }
 export interface RedFlag { flag: string; severity: 'high' | 'medium' | 'low'; explanation: string; }
 export interface GetHelp { resource: string; type: string; note: string; }
+// One ordered step in the "what happens next" legal-procedure timeline. Grounded
+// in the cited corpus, never invented.
+export interface ProcedureStep { step: string; detail: string; }
 
 export interface DecodeResult {
   document_type: string;
@@ -27,6 +30,11 @@ export interface DecodeResult {
   scam_risk?: ScamRisk;
   red_flags: RedFlag[];
   draft_response: string;
+  // Optional so older UI still compiles. procedure is the ordered "what happens
+  // next" timeline; what_if_ignored is one honest sentence on the consequence of
+  // doing nothing (null when it cannot be grounded).
+  procedure?: ProcedureStep[];
+  what_if_ignored?: string | null;
   uncertainties: string[];
   get_help: GetHelp[];
 }
