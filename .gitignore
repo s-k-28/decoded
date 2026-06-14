@@ -1,0 +1,8 @@
+node_modules
+dist
+STEMINATE_WIN_PLAN.md
+.insforge
+.env
+.env.*
+.DS_Store
+*.log
