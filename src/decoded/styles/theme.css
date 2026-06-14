@@ -1,0 +1,207 @@
+/* =========================================================================
+   Decoded - Empathetic theme.
+   Re-skins the HIVE token layer from dark cinematic command to a warm, calm,
+   human, light system for people reading hard news. Loaded AFTER the HIVE
+   tokens and after decoded.css, so these values win. Typography, spacing, and
+   component structure are unchanged: this file is colour, light, and warmth.
+
+   Palette intent
+   - Canvas: warm paper. Ink: deep warm near-black (very high contrast).
+   - Terracotta: the brand and primary action. Human and reassuring.
+   - Teal: actions, info, listen.   Sage: rights, help, safety, all-clear.
+   - Honey: summary, attention, "soon".   Plum: what it means for you.
+   - Clay red: scam flags and critical deadlines. Serious, never neon.
+   ========================================================================= */
+
+:root {
+  /* ---- Canvas + surfaces (warm light) -------------------------------- */
+  --d-bg: #f7f1e8;          /* warm paper */
+  --d-bg-1: #f1e8da;        /* base behind panels */
+  --d-panel: #fffdf9;       /* card surface */
+  --d-panel-2: #f4ecdf;     /* nested wells */
+  --d-elev: #fffefb;        /* raised surfaces */
+  --d-elev-2: #faf3e8;
+
+  /* raised element fills (chips, ghost buttons, toggles) */
+  --raise: #fffdf9;
+  --raise-2: #f1e7d8;
+
+  /* ---- Borders: warm hairlines --------------------------------------- */
+  --d-line: rgba(60, 44, 33, 0.12);
+  --d-line-2: rgba(60, 44, 33, 0.20);
+  --d-line-glow: rgba(196, 86, 53, 0.34);
+
+  /* ---- Ink ----------------------------------------------------------- */
+  --d-text: #2a211b;        /* warm near-black */
+  --d-dim: rgba(42, 33, 27, 0.74);
+  --d-faint: rgba(42, 33, 27, 0.54);
+  --d-ghost: rgba(42, 33, 27, 0.34);
+
+  /* ---- Brand: terracotta --------------------------------------------- */
+  --brand: #c4562f;
+  --brand-bright: #d76b45;
+  --brand-deep: #a8431f;
+  --brand-soft: rgba(196, 86, 53, 0.10);
+
+  /* repoint the HIVE "amber" accent tokens at a warm honey, except where
+     brand is meant (handled per-component below). */
+  --d-amber: #b9791b;          /* honey: summary, attention, soon, medium */
+  --d-amber-bright: #cf9226;
+  --d-amber-deep: #9c6512;
+  --d-amber-ink: #ffffff;      /* text/icon on a filled accent */
+
+  /* ---- The role palette (warm + earthy, load-bearing) ---------------- */
+  --d-gold: var(--d-amber);    /* honey */
+  --d-live: #1c7d74;           /* teal: actions, info, live */
+  --d-mag: #7e5293;            /* plum: meaning for you */
+  --d-grn: #4d7a47;            /* sage: rights, help, all-clear */
+  --d-red: #b23528;            /* clay red: scam, critical */
+
+  --role-planner: var(--d-gold);
+  --role-worker: var(--d-live);
+  --role-critic: var(--d-mag);
+  --role-assembler: var(--d-grn);
+
+  --status-pending: #9a8c7b;
+  --status-running: var(--d-live);
+  --status-review: var(--d-amber);
+  --status-accepted: var(--d-grn);
+  --status-rejected: var(--d-red);
+  --status-failed: #97271c;
+  --status-killed: #b3a695;
+
+  /* ---- Warm gradient (hero verb, stat numbers) ----------------------- */
+  --grad-spectrum: linear-gradient(100deg, #c4562f 0%, #c08a2a 46%, #1c7d74 100%);
+  --grad-spectrum-soft: linear-gradient(100deg, rgba(196,86,53,0.9), rgba(192,138,42,0.9), rgba(28,125,116,0.9));
+
+  /* ---- Soft watercolour blooms (warm, gentle) ------------------------ */
+  --bloom-amber: radial-gradient(closest-side, rgba(212,107,69,0.30), transparent);
+  --bloom-mag: radial-gradient(closest-side, rgba(126,82,147,0.20), transparent);
+  --bloom-cyan: radial-gradient(closest-side, rgba(28,125,116,0.20), transparent);
+  --bloom-grn: radial-gradient(closest-side, rgba(77,122,71,0.18), transparent);
+
+  /* ---- Semantic surface + text aliases ------------------------------- */
+  --surface-canvas: var(--d-bg);
+  --surface-panel: var(--d-panel);
+  --surface-panel-nested: var(--d-panel-2);
+  --surface-elevated: var(--d-elev);
+  --surface-hover: rgba(60, 44, 33, 0.055);
+  --surface-glass: rgba(255, 253, 249, 0.72);
+
+  --border-hairline: var(--d-line);
+  --border-strong: var(--d-line-2);
+
+  --text-primary: var(--d-text);
+  --text-secondary: var(--d-dim);
+  --text-muted: var(--d-faint);
+  --text-ghost: var(--d-ghost);
+
+  --accent: var(--brand);
+  --accent-press: var(--brand-deep);
+  --focus-ring: color-mix(in srgb, var(--brand) 70%, transparent);
+
+  /* ---- Glass (translucent warm white) -------------------------------- */
+  --glass-bg: rgba(255, 253, 249, 0.74);
+  --glass-border: rgba(60, 44, 33, 0.14);
+  --glass-blur: 16px;
+  --glass-blur-card: 16px;
+
+  /* ---- Soft warm shadows (no deep black) ----------------------------- */
+  --shadow-card: 0 1px 0 rgba(255,255,255,0.7) inset, 0 12px 30px -18px rgba(60,44,33,0.26);
+  --shadow-card-hover: 0 1px 0 rgba(255,255,255,0.8) inset, 0 20px 44px -22px rgba(60,44,33,0.34);
+  --shadow-panel: 0 28px 70px -44px rgba(60,44,33,0.34), 0 0 0 1px rgba(60,44,33,0.03) inset;
+  --shadow-modal: 0 30px 80px -40px rgba(60,44,33,0.40), 0 0 0 1px rgba(60,44,33,0.04) inset;
+  --shadow-cta: 0 12px 30px -12px rgba(196,86,53,0.55);
+
+  /* ---- Glows soften to warm coloured drops --------------------------- */
+  --glow-amber: 0 8px 22px -12px rgba(185,121,27,0.55);
+  --glow-amber-strong: 0 10px 28px -10px rgba(196,86,53,0.55);
+  --glow-cyan: 0 8px 24px -12px rgba(28,125,116,0.50);
+  --glow-mag: 0 8px 24px -12px rgba(126,82,147,0.50);
+  --glow-grn: 0 8px 24px -12px rgba(77,122,71,0.48);
+  --glow-node: 0 0 7px currentColor;
+
+  --edge-amber: linear-gradient(90deg, transparent, rgba(196,86,53,0.5), transparent);
+  --edge-spectrum: linear-gradient(90deg, transparent, rgba(196,86,53,0.6), rgba(192,138,42,0.55), rgba(28,125,116,0.55), transparent);
+
+  --grain: none;
+}
+
+/* paper does not need anti-band grain; remove the screen-blended noise */
+body::before { display: none !important; }
+
+/* warm, visible scrollbars on light */
+* { scrollbar-color: rgba(60,44,33,0.26) transparent; }
+::-webkit-scrollbar-thumb { background: rgba(60,44,33,0.22); }
+::-webkit-scrollbar-thumb:hover { background: rgba(60,44,33,0.32); }
+::selection { background: color-mix(in srgb, var(--brand) 26%, transparent); color: var(--d-text); }
+
+/* =========================================================================
+   Component re-skins where decoded.css assumed a dark canvas.
+   ========================================================================= */
+
+/* brand mark glow -> soft warm */
+.hv-brand-hex { filter: drop-shadow(0 2px 6px rgba(196,86,53,0.30)); }
+.hv-brand--link:hover .hv-brand-hex { filter: drop-shadow(0 3px 9px rgba(196,86,53,0.45)); }
+.hv-brand-word { color: var(--d-text); }
+
+/* persistent disclaimer: warm honey band, ink text */
+.dc-disclaimer {
+  background: color-mix(in srgb, var(--brand) 8%, var(--d-bg));
+  border-bottom: 1px solid color-mix(in srgb, var(--brand) 16%, var(--d-line));
+  color: color-mix(in srgb, var(--brand-deep) 92%, var(--d-text));
+}
+
+/* eyebrow + hero kicker in brand terracotta */
+.dc-eyebrow { color: var(--brand); }
+
+/* The drifting colour blooms are replaced by a quiet engineering dot-grid:
+   structural, fixed, faded out below the hero. No floating watercolour blobs. */
+.dc-bloom { display: none !important; }
+.dc-field {
+  background-image: radial-gradient(circle, rgba(60,44,33,0.05) 1px, transparent 1.5px);
+  background-size: 23px 23px;
+  -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.15) 34%, transparent 64%);
+          mask-image: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.15) 34%, transparent 64%);
+}
+.dc-field::after { display: none; }
+
+/* console: warm card, terracotta-tinted aura instead of cyan */
+.dc-console { box-shadow: var(--shadow-panel), 0 24px 70px -44px rgba(196,86,53,0.30); }
+
+/* raised element fills */
+.dc-textbtn { background: var(--raise); }
+.dc-chip { background: var(--raise); }
+.dc-chip:hover { background: var(--raise-2); }
+.dc-ghostbtn { background: var(--raise); }
+.dc-draft-copy { background: var(--raise); }
+.dc-hist { background: var(--raise); }
+.dc-rerun { background: linear-gradient(180deg, #fffdf9, #f6eee1); }
+.dc-trust-item svg { color: var(--d-grn); }
+
+/* primary action: terracotta, white label */
+.dc-decode {
+  background: linear-gradient(180deg, var(--brand-bright), var(--brand));
+  color: #fff;
+  box-shadow: var(--shadow-cta);
+}
+.dc-decode:hover:not(:disabled) { box-shadow: 0 18px 40px -12px rgba(196,86,53,0.6); filter: brightness(1.03); }
+
+/* checkbox fill stays teal (action), white check */
+.dc-check[aria-pressed='true'] { background: var(--d-live); border-color: var(--d-live); color: #fff; }
+
+/* listen control when active: teal fill, white glyph */
+.dc-listen[data-on='true'] { color: #fff; background: var(--d-live); border-color: var(--d-live); }
+
+/* input focus glow -> warm honey (already amber rgba, nudge to brand) */
+.dc-textarea:focus { box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 16%, transparent), var(--glow-amber); border-color: color-mix(in srgb, var(--brand) 55%, transparent); }
+.dc-draft-ta:focus { box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 14%, transparent); border-color: color-mix(in srgb, var(--brand) 50%, transparent); }
+
+/* meaning-for-you block: gentle plum wash */
+.dc-meaning { background: color-mix(in srgb, var(--d-mag) 8%, var(--d-panel)); border-color: color-mix(in srgb, var(--d-mag) 28%, transparent); }
+
+/* low-confidence banner: warm, not harsh */
+.dc-lowconf { background: color-mix(in srgb, var(--d-red) 8%, var(--d-panel)); }
+
+/* preview clear button on light */
+.dc-preview-clear { background: rgba(255,253,249,0.85); color: var(--d-text); }
