@@ -828,6 +828,255 @@ const SETTLEMENT_REPAIR_CORPUS: Rule[] = [
   },
 ];
 
+const TAX_CORPUS: Rule[] = [
+  {
+    id: "irs_cdp_levy_hearing",
+    topic: "Collection Due Process hearing (levy)",
+    kind: "consumer_right",
+    rule:
+      "Before the IRS takes your property by levy, it must send you written notice of your right to a Collection Due Process hearing, an impartial review of the proposed levy by the IRS Independent Office of Appeals where you can raise issues like collection alternatives or whether you owe the tax.",
+    citation: "26 U.S.C. 6330",
+    source_url: "https://www.law.cornell.edu/uscode/text/26/6330",
+  },
+  {
+    id: "irs_cdp_levy_30_day_deadline",
+    topic: "30-day deadline to request CDP hearing (levy)",
+    kind: "timeline",
+    rule:
+      "You have a 30-day period, beginning with the levy notice, to request a Collection Due Process hearing; the notice must be given at least 30 days before the first levy. After a hearing determination, you have another 30 days to petition the Tax Court for review.",
+    citation: "26 U.S.C. 6330",
+    source_url: "https://www.law.cornell.edu/uscode/text/26/6330",
+  },
+  {
+    id: "irs_cdp_lien_30_day_deadline",
+    topic: "30-day deadline to request CDP hearing (lien)",
+    kind: "timeline",
+    rule:
+      "After the IRS files a Notice of Federal Tax Lien (a public claim against your property for unpaid tax), it must notify you within 5 business days, and you have a 30-day period beginning the day after that 5-day window to request a Collection Due Process hearing about the lien.",
+    citation: "26 U.S.C. 6320",
+    source_url: "https://www.law.cornell.edu/uscode/text/26/6320",
+  },
+  {
+    id: "irs_installment_agreement",
+    topic: "Installment agreement",
+    kind: "consumer_right",
+    rule:
+      "The IRS is authorized to enter into a written installment agreement letting you pay your tax liability over time in installments if it determines the agreement will facilitate full or partial collection of what you owe.",
+    citation: "26 U.S.C. 6159",
+    source_url: "https://www.law.cornell.edu/uscode/text/26/6159",
+  },
+  {
+    id: "irs_offer_in_compromise",
+    topic: "Offer in compromise",
+    kind: "consumer_right",
+    rule:
+      "The IRS may compromise (settle) your tax liability for less than the full amount through an offer in compromise; if your offer is rejected you are entitled to an administrative review and may appeal the rejection to the IRS Independent Office of Appeals.",
+    citation: "26 U.S.C. 7122",
+    source_url: "https://www.law.cornell.edu/uscode/text/26/7122",
+  },
+  {
+    id: "irs_taxpayer_bill_of_rights",
+    topic: "Taxpayer Bill of Rights",
+    kind: "consumer_right",
+    rule:
+      "You hold ten fundamental rights that IRS employees must act in accord with, including the right to be informed, to quality service, to challenge the IRS's position and be heard, to appeal in an independent forum, to finality, to privacy, to confidentiality, and to retain representation.",
+    citation: "26 U.S.C. 7803(a)(3)",
+    source_url: "https://www.law.cornell.edu/uscode/text/26/7803",
+  },
+  {
+    id: "irs_10_year_collection_limit",
+    topic: "10-year collection statute of limitations",
+    kind: "timeline",
+    rule:
+      "The IRS generally has 10 years from the date a tax is assessed to collect it by levy or court proceeding; this period can be extended only in limited situations, such as a written agreement you sign or a pending installment agreement.",
+    citation: "26 U.S.C. 6502",
+    source_url: "https://www.law.cornell.edu/uscode/text/26/6502",
+  },
+  {
+    id: "irs_innocent_spouse_relief",
+    topic: "Innocent spouse relief",
+    kind: "consumer_right",
+    rule:
+      "If you filed a joint return, you may elect innocent spouse relief from joint and several liability for an understatement of tax you did not know about; for the basic and separate-liability elections, you generally must request relief no later than 2 years after the IRS begins collection activity against you.",
+    citation: "26 U.S.C. 6015",
+    source_url: "https://www.law.cornell.edu/uscode/text/26/6015",
+  },
+  {
+    id: "irs_cp2000_dispute_proposed_change",
+    topic: "Dispute a CP2000 proposed change",
+    kind: "consumer_right",
+    rule:
+      "A CP2000 notice is a proposal to change your tax (because income reported to the IRS by third parties does not match your return), not a final bill. You have the right to disagree, and should respond by the date on the notice (generally within 30 days, or 60 days if you live outside the U.S.) stating whether you agree or disagree and including supporting documents.",
+    citation: "IRS, Understanding Your CP2000 Series Notice",
+    source_url: "https://www.irs.gov/individuals/understanding-your-cp2000-series-notice",
+  },
+  {
+    id: "irs_tax_court_petition_90_days",
+    topic: "Petition the Tax Court after a deficiency notice",
+    kind: "timeline",
+    rule:
+      "If the IRS mails you a statutory notice of deficiency (a formal letter proposing additional tax, sometimes called a 90-day letter), you have 90 days (150 days if the notice is addressed to you outside the United States) to file a petition with the U.S. Tax Court. During that period and until the Tax Court decides, the IRS generally cannot assess the deficiency or levy to collect it.",
+    citation: "26 U.S.C. § 6213(a)",
+    source_url: "https://www.law.cornell.edu/uscode/text/26/6213",
+  },
+  {
+    id: "irs_currently_not_collectible_hardship",
+    topic: "Currently not collectible (hardship) status",
+    kind: "consumer_right",
+    rule:
+      "If paying your tax debt would cause financial hardship, you can ask the IRS to place your account in Currently Not Collectible (CNC) status, which temporarily suspends most collection activity until your finances improve. The debt is not forgiven, penalties and interest keep accruing, and the IRS may still file a tax lien or keep your refunds.",
+    citation: "IRS, Temporarily Delay the Collection Process",
+    source_url: "https://www.irs.gov/businesses/small-businesses-self-employed/temporarily-delay-the-collection-process",
+  },
+  {
+    id: "irs_first_time_penalty_abatement",
+    topic: "First Time Abate penalty relief",
+    kind: "consumer_right",
+    rule:
+      "You may qualify for First Time Abate relief from failure-to-file, failure-to-pay, or failure-to-deposit penalties if you have a clean history: you filed (or filed an extension for) all currently required returns, and you did not receive penalties for the prior three tax years. You can request it even if you have not yet fully paid the underlying tax.",
+    citation: "IRS, Penalty Relief Due to First Time Abate or Other Administrative Waiver",
+    source_url: "https://www.irs.gov/payments/penalty-relief-due-to-first-time-abate-or-other-administrative-waiver",
+  },
+  {
+    id: "irs_reasonable_cause_penalty_relief",
+    topic: "Reasonable cause penalty relief",
+    kind: "consumer_right",
+    rule:
+      "The failure-to-file and failure-to-pay penalties do not apply if you can show that the failure was due to reasonable cause and not due to willful neglect (for example, circumstances beyond your control despite ordinary business care). You can request this relief by explaining your situation to the IRS.",
+    citation: "26 U.S.C. § 6651(a)",
+    source_url: "https://www.law.cornell.edu/uscode/text/26/6651",
+  },
+  {
+    id: "irs_refund_claim_3_year_deadline",
+    topic: "Deadline to claim a tax refund",
+    kind: "timeline",
+    rule:
+      "To get a refund or credit of overpaid tax, you must file your claim (usually a return or amended return) within 3 years from the time the original return was filed or 2 years from the time the tax was paid, whichever period is later. If you miss this deadline, the refund is generally lost.",
+    citation: "26 U.S.C. § 6511(a)",
+    source_url: "https://www.law.cornell.edu/uscode/text/26/6511",
+  },
+];
+
+const STUDENT_LOAN_CORPUS: Rule[] = [
+  {
+    id: "sl_idr_payment_cap",
+    topic: "Income-driven repayment",
+    kind: "consumer_right",
+    rule:
+      "On a federal Direct Loan income-driven repayment plan, your required monthly payment is calculated as a set percentage of your discretionary income (the amount your income exceeds a poverty-line threshold), so your payment can be far lower than the standard 10-year amount and can be $0 if your income is low enough.",
+    citation: "34 CFR 685.209",
+    source_url: "https://www.law.cornell.edu/cfr/text/34/685.209",
+  },
+  {
+    id: "sl_borrower_defense_school_misconduct",
+    topic: "Borrower defense to repayment",
+    kind: "consumer_right",
+    rule:
+      "You may assert a borrower defense to seek discharge of a federal Direct Loan if your school engaged in misconduct (such as a misrepresentation of material fact about the program) related to the loan or the educational services it paid for; the available grounds depend on when your loan was first disbursed.",
+    citation: "34 CFR 685.206",
+    source_url: "https://www.law.cornell.edu/cfr/text/34/685.206",
+  },
+  {
+    id: "sl_borrower_defense_forbearance",
+    topic: "Borrower defense pending review",
+    kind: "consumer_right",
+    rule:
+      "When you submit a borrower defense application and are current on your loan, the Department places your loan in forbearance while it reviews your application, and you must be told you can decline that forbearance and keep making payments; you only need to prove your defense by a preponderance of the evidence (more likely than not).",
+    citation: "34 CFR 685.222",
+    source_url: "https://www.law.cornell.edu/cfr/text/34/685.222",
+  },
+  {
+    id: "sl_closed_school_discharge",
+    topic: "Closed school discharge",
+    kind: "consumer_right",
+    rule:
+      "If your school closed while you were enrolled or within 180 days after you withdrew, you may qualify to have your federal Direct Loan discharged; if the Department determines from its records that you qualify and you did not finish the program elsewhere, the discharge can happen automatically one year after the closure date.",
+    citation: "34 CFR 685.214",
+    source_url: "https://www.law.cornell.edu/cfr/text/34/685.214",
+  },
+  {
+    id: "sl_tpd_discharge_reinstatement",
+    topic: "Total and permanent disability discharge",
+    kind: "consumer_right",
+    rule:
+      "If you are totally and permanently disabled, you may have your federal Direct Loan discharged after submitting qualifying medical or Social Security Administration documentation; be aware that if you take out a new Direct Loan or TEACH Grant within 3 years of the discharge, the discharged obligation can be reinstated.",
+    citation: "34 CFR 685.213",
+    source_url: "https://www.law.cornell.edu/cfr/text/34/685.213",
+  },
+  {
+    id: "sl_loan_rehabilitation",
+    topic: "Default rehabilitation",
+    kind: "consumer_right",
+    rule:
+      "You can rehabilitate a defaulted federal Direct Loan by making 9 voluntary, reasonable and affordable monthly payments (each within 20 days of the due date) over 10 consecutive months, after which the Department instructs credit reporting agencies to remove the default from your credit history; a given loan can generally be rehabilitated this way only once.",
+    citation: "34 CFR 685.211(f)",
+    source_url: "https://www.law.cornell.edu/cfr/text/34/685.211",
+  },
+  {
+    id: "sl_garnishment_15_percent_cap",
+    topic: "Administrative wage garnishment",
+    kind: "consumer_right",
+    rule:
+      "For a defaulted federal student loan, the amount garnished from your wages in any pay period cannot exceed 15 percent of your disposable pay unless you give written consent to more, and you must receive written notice mailed to your last known address at least 30 days before garnishment proceedings begin.",
+    citation: "20 U.S.C. 1095a(a)",
+    source_url: "https://www.law.cornell.edu/uscode/text/20/1095a",
+  },
+  {
+    id: "sl_pslf_120_payments_forgiveness",
+    topic: "Public Service Loan Forgiveness",
+    kind: "consumer_right",
+    rule:
+      "If you make 120 separate qualifying monthly payments on your Direct Loans (loans made directly by the U.S. Department of Education) while working full-time for a qualifying public-service employer such as a government agency or a 501(c)(3) nonprofit, the government forgives the remaining principal and accrued interest on those loans.",
+    citation: "34 CFR 685.219",
+    source_url: "https://www.law.cornell.edu/cfr/text/34/685.219",
+  },
+  {
+    id: "sl_unemployment_deferment",
+    topic: "Unemployment deferment",
+    kind: "consumer_right",
+    rule:
+      "If you are unemployed, you can get an unemployment deferment that pauses your Direct Loan payments for up to three years total, by showing you are eligible for unemployment benefits or that you are diligently seeking but unable to find full-time employment.",
+    citation: "34 CFR 685.204(f)",
+    source_url: "https://www.law.cornell.edu/cfr/text/34/685.204",
+  },
+  {
+    id: "sl_economic_hardship_deferment",
+    topic: "Economic hardship deferment",
+    kind: "consumer_right",
+    rule:
+      "If your income is low enough to meet the regulation's economic-hardship test (for example, you receive federal or state public assistance, or your income falls at or below set poverty-based limits), you can get an economic hardship deferment that pauses your Direct Loan payments, granted up to one year at a time for up to three years total.",
+    citation: "34 CFR 685.204(g)",
+    source_url: "https://www.law.cornell.edu/cfr/text/34/685.204",
+  },
+  {
+    id: "sl_deferment_subsidized_interest",
+    topic: "Interest during deferment",
+    kind: "consumer_right",
+    rule:
+      "During an approved deferment (an authorized pause on payments), interest does not accrue on your Direct Subsidized Loans, but interest does continue to accrue on your unsubsidized loans and may be added to your balance.",
+    citation: "34 CFR 685.204(a)",
+    source_url: "https://www.law.cornell.edu/cfr/text/34/685.204",
+  },
+  {
+    id: "sl_tax_offset_notice_review",
+    topic: "Tax refund offset review",
+    kind: "consumer_right",
+    rule:
+      "Before your federal tax refund can be seized (offset) to collect a defaulted federal student loan, the agency must send you notice and give you at least 60 days to present evidence that all or part of the debt is not past-due or not legally enforceable, and the agency must consider that evidence.",
+    citation: "31 U.S.C. 3720A(b)",
+    source_url: "https://www.law.cornell.edu/uscode/text/31/3720A",
+  },
+  {
+    id: "sl_false_certification_discharge",
+    topic: "False-certification discharge",
+    kind: "consumer_right",
+    rule:
+      "You can have your Direct Loan discharged (canceled) if the school falsely certified your eligibility to borrow, including signing the loan documents without your authorization, enrolling you despite a status that legally disqualified you from the job the program trained you for, or certifying the loan as a result of identity theft committed against you.",
+    citation: "34 CFR 685.215",
+    source_url: "https://www.law.cornell.edu/cfr/text/34/685.215",
+  },
+];
+
 type Vertical =
   | "debt"
   | "medical"
@@ -839,6 +1088,8 @@ type Vertical =
   | "levy"
   | "timebarred"
   | "settlement"
+  | "tax"
+  | "student_loan"
   | "other";
 
 function classify(text: string): Vertical {
@@ -998,11 +1249,59 @@ function classify(text: string): Vertical {
   // debt, medical, housing, benefits, which preserves the prior behavior that a
   // debt letter beats a medical tie. Zero matches across all falls back to
   // "other".
+  const tax = count([
+    "irs",
+    "internal revenue service",
+    "tax return",
+    "notice of deficiency",
+    "cp2000",
+    "cp14",
+    "cp501",
+    "cp503",
+    "cp504",
+    "federal tax",
+    "back taxes",
+    "tax lien",
+    "notice of federal tax lien",
+    "notice of levy",
+    "intent to levy",
+    "collection due process",
+    "installment agreement",
+    "offer in compromise",
+    "unpaid taxes",
+    "form 1040",
+    "internal revenue code",
+  ]);
+  const studentLoan = count([
+    "student loan",
+    "federal student aid",
+    "department of education",
+    "loan servicer",
+    "income-driven repayment",
+    "income driven repayment",
+    "idr plan",
+    "public service loan forgiveness",
+    "pslf",
+    "forbearance",
+    "deferment",
+    "loan default",
+    "defaulted loan",
+    "loan rehabilitation",
+    "borrower defense",
+    "total and permanent disability discharge",
+    "closed school discharge",
+    "nelnet",
+    "mohela",
+    "aidvantage",
+    "direct loan",
+  ]);
   const ranked: Array<[Vertical, number]> = [
     ["debt", debt],
     ["medical", medical],
     ["housing", housing],
     ["benefits", benefits],
+    ["tax", tax],
+    ["student_loan", studentLoan],
   ];
   let best: Vertical = "other";
   let bestN = 0;
@@ -1051,6 +1350,8 @@ function corpusFor(v: Vertical): Rule[] {
   if (v === "levy") return [...LEVY_CORPUS, ...GARNISHMENT_CORPUS];
   if (v === "timebarred") return [...TIMEBARRED_CORPUS, ...FDCPA_CORPUS];
   if (v === "settlement") return [...SETTLEMENT_REPAIR_CORPUS, ...FDCPA_CORPUS];
+  if (v === "tax") return TAX_CORPUS;
+  if (v === "student_loan") return STUDENT_LOAN_CORPUS;
   return [];
 }
 
@@ -1255,23 +1556,47 @@ function scanLetter(text: string, v: Vertical): Signal[] {
   return sig;
 }
 
-const SYSTEM = `You are Decoded, a document explainer and checker. You translate confusing official documents into plain language for a stressed person who is NOT a lawyer or a doctor, and when you are given a RIGHTS CORPUS you also check the document against that law.
+const SYSTEM = `You are Decoded. You read ONE confusing official document that a stressed, non-expert person received, and you return STRICT JSON that makes them feel "this read MY exact document and caught things I would never have noticed." You are NOT a generic summarizer. You are a close reader of THIS document: its exact amounts, dates, names, and account numbers, the math behind its deadlines, what the sender is implying without saying, and what the sender is likely to do next.
 
-You receive a document (as text or an image), a target reading level, a target language, and sometimes a RIGHTS CORPUS and DETECTED SIGNALS. A document may be a debt-collection letter, a medical bill or insurance denial, an eviction or housing notice, a public-benefits notice (SNAP or Medicaid), or something else.
+You receive a document (as text or an image), a target reading level, a target language, and sometimes a RIGHTS CORPUS and DETECTED SIGNALS. A document may be a debt-collection letter, a medical bill or insurance denial/EOB, an eviction or housing notice, a public-benefits notice (SNAP or Medicaid), an IRS or tax notice, a federal student-loan notice, or something else.
 
-Write EVERY output field in the target language, at the target reading level. Use short sentences. If a legal or medical term is unavoidable, define it inline. Be calm, warm, and direct. Use "you" and "your". Reduce panic and increase the reader's sense of agency.
+HOW TO THINK (do this silently and NEVER reveal it; output only the JSON object):
+1. CLASSIFY FIRST. Pin the exact document type and sub-type before anything else. The wrong frame produces a confident wrong answer: an EOB is NOT a bill; a pay-or-quit notice is NOT a move-out order; the original creditor is NOT the same as a third-party collector.
+2. EXTRACT THE FACTS. Pull every concrete particular the document actually contains: who sent it (name, role, whether it calls itself a debt collector), the original creditor/insurer/landlord/agency, the recipient, account/claim/case/policy numbers, every dollar amount (original balance, interest, fees, "patient responsibility", rent owed, totals), every date (letter date, service date, due date, "respond by", notice-period start), and the exact demand or decision. Reuse these EXACT values later. If a value is not in the document, it does not exist — never supply one.
+3. DO THE DEADLINE MATH. For each date or window, compute the real timeline from the document's own dates: when the window ends and roughly how much time is left. Note the caveats (a clock that runs from receipt rather than the letter date; short notices that may exclude weekends and holidays; mailing lag). If a date is missing or you cannot compute it safely, say so in "uncertainties" — never guess a date.
+4. TREAT OMISSIONS AS FINDINGS. For the document's type, check what the law requires it to contain and whether it is actually there. A missing required disclosure (a debt validation / 30-day dispute notice, an itemization, an appeal-rights notice, cure language in an eviction notice) is itself a finding, not a neutral. Silence is data.
+5. READ THE SUBTEXT. What does the sender WANT (fast payment, to discourage a dispute, to scare a move-out, to close a claim)? What are they NOT saying (your right to dispute / appeal / a hearing; that they must verify the debt; that a number is an estimate, not a final amount; that emergency care cannot be balance-billed)? What is unusual about THIS document?
+6. CHECK AGAINST THE CORPUS. Match what the document does or fails to do against the RIGHTS CORPUS entries you were given. Treat DETECTED SIGNALS as leads, not verdicts: confirm each against the text before relying on it, and silently drop any the document does not support.
+7. ANTICIPATE THE NEXT MOVE. What does this kind of document lead to next, legally, and what is the sender most likely to do?
+
+HIGH-VALUE INSIGHT to watch for by document type (surface it plainly, in the right field, when it is actually present):
+- Debt letters: the statute-of-limitations / "zombie debt" trap — if the debt looks old, a lawsuit may be time-barred AND making any payment or written acknowledgment can RESTART the clock. The limitations period is state-specific; say "check the limit for your state," never assert a number.
+- Medical bills / EOBs: the No Surprises Act balance-bill check — for emergency care, or an out-of-network provider at an in-network facility, you generally CANNOT be billed beyond your in-network cost-sharing; such a charge may be unlawful, so dispute it rather than pay. Only raise this when the corpus supports it.
+- Eviction / housing notices: a notice is NOT an eviction and NOT a court order — the reader does not have to move out by that date; removal is lawful only after a court judgment and a sheriff, and lockouts or utility shut-offs are illegal self-help.
+- Government / benefits letters: almost every adverse decision is appealable on a hard, short clock; verify the agency through its official published contact, never the phone number or link printed in the letter.
+- IRS / tax notices: the IRS must give you appeal rights and generally a 30-day window before it can levy, the right to seek a payment plan or settlement, and a roughly 10-year limit on collecting a tax. Verify the IRS through its official .gov contact, never a number or link in a suspicious notice.
+- Federal student-loan notices: borrowers have strong, often-unmentioned rights — income-driven repayment that can lower a payment, getting out of default through rehabilitation, discharge if a school closed or for total and permanent disability, and a lower 15% cap on wage garnishment for defaulted federal loans.
+
+VOICE: Write EVERY field in the target language, at the target reading level. Short sentences. Second person ("you", "your"). Calm, warm, direct. Reduce panic, increase agency. Define any unavoidable legal or medical term inline. Do not pad — specific beats verbose. Name the actual party, quote the actual amount, cite the actual date.
 
 HARD RULES (non-negotiable):
 1. You are NOT a lawyer or doctor and you do not give legal or medical advice. You EXPLAIN what a document says, CHECK it against any rules you are given, and lay out general options.
-2. NEVER invent facts, dates, statute numbers, case numbers, dollar amounts, or rights. If something is not in the document, leave the field null or empty, or list it under "uncertainties". A fabricated right or citation is the worst possible failure.
+2. NEVER invent facts, dates, statute numbers, case numbers, dollar amounts, parties, or rights. If something is not in the document, leave the field null or empty, or list it under "uncertainties". A fabricated right or citation is the worst possible failure.
 3. CITATIONS: you may ONLY use a "citation" and "source_url" by copying them VERBATIM from a RIGHTS CORPUS entry you were given. If no corpus entry supports a statement, set citation and source_url to null. Never write a citation that is not in the corpus.
 4. If text is unreadable or ambiguous, say so in "uncertainties". Do not fill gaps with plausible guesses.
 5. "violations" are concrete problems with THIS document measured against the corpus: a missing required disclosure, a prohibited practice, an unlawful threat, or a bill the law says you should not owe. Each must map to a corpus citation. Do not list a violation you cannot ground in the corpus; describe softer concerns in "red_flags" instead.
-6. "scam_risk" judges whether this looks like a scam or predatory letter. Weigh the DETECTED SIGNALS and the document. Untraceable payment demands, arrest threats, and requests for sensitive personal information all raise it. A normal bill from a real provider is usually low or none.
-7. "draft_response" is a courteous, firm, factual reply the reader could send. For a debt letter, default to a written request to verify the debt. For a denied medical claim, default to a request to start an internal appeal. Use [BRACKETS] for anything the user must fill in. Never admit fault or liability.
+6. SCAM-RISK IS A SEPARATE AXIS FROM LEGAL-RISK. "scam_risk" judges whether the document itself looks like a scam or predatory fake. Weigh the DETECTED SIGNALS and the document. Untraceable payment demands (gift cards, wire, crypto), arrest or jail threats over a debt, and requests for sensitive personal information (SSN, passwords, bank logins) all raise it. A real bill, notice, or denial from a genuine provider, insurer, landlord, or agency is usually "low" or "none" even when it contains a violation — an unlawful charge by a real biller is a violation, not a scam.
+7. "draft_response" is a courteous, firm, factual reply the reader could send, grounded in THIS document's facts (reference the actual account or claim number and amount where present). For a debt letter, default to a written request to verify the debt. For a denied medical claim, default to a request to start an internal appeal. Use [BRACKETS] for anything the user must fill in. Never admit fault or liability.
 8. "get_help" names REAL categories of help only (legal aid, the CFPB, a state attorney general, a state insurance regulator, a tenant union or housing legal aid, a state SNAP or Medicaid office, 211). Do not invent phone numbers or URLs.
-9. "procedure" is a short ordered timeline, in plain language, of what legally happens NEXT for this kind of document. Ground every step in the corpus and the document; do not invent steps, deadlines, or court names. Each item is { "step": short label, "detail": one or two plain sentences }. For a debt letter the path is typically: you can request verification, then the 30-day dispute window, then the collector may sue, then a judgment could lead to wage garnishment. For an eviction the path is typically: the notice period, then the landlord files in court, then you are served, then a hearing, then a judgment, then a writ of possession enforced by a sheriff. For a benefits denial the path is typically: you can request a fair hearing, then benefits may continue if you ask in time, then the hearing, then a written decision. Eviction and benefits steps and deadlines vary by state, so say that in the relevant step and keep numbers general unless the document or corpus gives them. Use an empty array if you cannot ground any steps.
+9. "procedure" is a short ordered timeline, in plain language, of what legally happens NEXT for this kind of document. Ground every step in the corpus and the document; do not invent steps, deadlines, or court names. Each item is { "step": short label, "detail": one or two plain sentences }. For a debt letter the path is typically: you can request verification, then the 30-day dispute window, then the collector may sue, then a judgment could lead to wage garnishment. For an eviction the path is typically: the notice period, then the landlord files in court, then you are served, then a hearing, then a judgment, then a writ of possession enforced by a sheriff. For a benefits denial the path is typically: you can request a fair hearing, then benefits may continue if you ask in time, then the hearing, then a written decision. For an IRS notice the path is typically: the notice of tax due or of intent to levy, then your 30-day window to request a Collection Due Process hearing or to set up a payment plan or offer in compromise, then Appeals, then collection by levy or lien if unresolved. For a federal student-loan notice the path is typically: the notice (such as default or garnishment), then options to lower the payment through income-driven repayment, to cure default through rehabilitation, or to seek a discharge, then administrative wage garnishment capped at 15% if the default is not resolved. Eviction and benefits steps and deadlines vary by state, so say that in the relevant step and keep numbers general unless the document or corpus gives them. Use an empty array if you cannot ground any steps.
 10. "what_if_ignored" is ONE honest sentence about the realistic consequence of doing nothing, such as a default judgment, wage garnishment, removal by a sheriff, or loss of benefits. If the consequence varies by state or you are unsure, say so plainly. If you cannot ground a consequence, set it to null. Never exaggerate to frighten the reader.
+
+WHERE THE DEPTH LIVES:
+- "summary": 2 to 3 sentences naming the SENDER, the original creditor/insurer/landlord/agency, the exact key amount, and the core demand or decision, as they appear in THIS document.
+- "meaning_for_you": direct second person — what it means for you, what the sender wants, what they are NOT telling you, and the deadline math (when the clock runs out and how much time is left). This field must feel read-to-them, not generic.
+- "deadlines": one entry per real date or window; "raw_text" quotes the document; "date" is ISO only if the document states it or you computed it safely, else null.
+- "rights": prefer rights supported by the corpus (copy citation and source_url verbatim); a right with no corpus support carries null citation and source_url.
+- "red_flags": anything off that is not a cited violation — pressure tactics, vague or missing itemization, a "total" with no breakdown, a number presented as final that reads like an estimate.
 
 Return ONLY a JSON object with EXACTLY these fields:
 {
